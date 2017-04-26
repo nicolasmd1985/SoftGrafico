@@ -1,6 +1,12 @@
 package mahecha.nicolas.softgrafico;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -13,9 +19,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
+import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private MiServiceIBinder mServiceIBinder;
+    private MiTareaAsincrona tareaP;
+    String resultado;
+    DBController controller = new DBController(this);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +60,26 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        ////////////////FRAGMENTOS DE INICIO/////////////
+        Mapas map = new Mapas();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.principal,map, "tag");
+        ft.addToBackStack("tag");
+        ft.commit();
+
+
+        ListaDispositivos fragmento = new ListaDispositivos();
+        FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
+        transiction.replace(R.id.lista,fragmento);
+        transiction.commit();
+
+
+
+
+
+
     }
 
     @Override
@@ -82,8 +121,21 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+
+            Mapas map = new Mapas();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.principal,map, "tag");
+            ft.addToBackStack("tag");
+            ft.commit();
+
+
+            ListaDispositivos fragmento = new ListaDispositivos();
+            FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
+            transiction.replace(R.id.lista,fragmento);
+            transiction.commit();
+
         } else if (id == R.id.nav_gallery) {
+
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -96,8 +148,14 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_share) {
+            tareaP.cancel(true);
+            mServiceIBinder.onDestroy();
 
         } else if (id == R.id.nav_send) {
+            Intent intent = new Intent(this, MiServiceIBinder.class);
+            this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
+            tareaP = new MiTareaAsincrona();
+            tareaP.execute();
 
         }
 
@@ -105,4 +163,101 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+    // CONFIGURACION INTERFACE SERVICECONNECTION IBINDER
+    private ServiceConnection sConnectionIB = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MiServiceIBinder.MiBinderIBinder binder = (MiServiceIBinder.MiBinderIBinder) service;
+            mServiceIBinder = binder.getService();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {}
+    };
+
+
+//////////************TAREA ASINCRONA********//////////
+
+    private class MiTareaAsincrona extends AsyncTask<Void, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            while(true) {
+                tareaLarga();
+                publishProgress();
+                if(isCancelled())
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            if (mServiceIBinder != null) {
+                resultado = String.valueOf(mServiceIBinder.getResultado());
+                if(resultado != null) {
+                    if(!resultado.contentEquals(""))
+                    {
+                        saltos();
+//                        enviar();
+                    }
+                    mServiceIBinder.cleanr();
+                }
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(result)
+                Toast.makeText(MainActivity.this, "Tarea finalizada!", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            Toast.makeText(MainActivity.this, "Tarea cancelada!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void saltos() {
+        String[] split = resultado.split("\n");
+        StringBuilder sb = new StringBuilder();
+        String sSubCadena = "";
+
+        Toast.makeText(this,resultado,Toast.LENGTH_LONG).show();
+        for (int i = 0; i < split.length; i++) {
+            if (split[i].contains("AVERIA")) {
+                ArrayList<HashMap<String, String>> userList = controller.getUsers();
+                sSubCadena = split[i].substring(split[i].length()-7,split[i].length());
+
+            }
+
+        }
+    }
+
+    /////////*******TAREA LARGA*********/////////
+
+    private void tareaLarga()
+    {
+        try {
+            Thread.sleep(10000);
+        } catch(InterruptedException e) {}
+    }
+
+
+
+
+
+
+
+
+
 }
