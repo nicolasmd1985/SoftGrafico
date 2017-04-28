@@ -89,6 +89,14 @@ public class ListaEventos extends Fragment {
                     item = new Elemento("https://cdn3.iconfinder.com/data/icons/3d-printing-icon-set/512/Error.png", hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
+                if(hashMap.get("tipo").contains("3")) {
+                    item = new Elemento("http://www.sicogravi.com/uploads/products/pulsador-de-alarma-emis.png", hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
+                    arraydir.add(item);
+                }
+                if(hashMap.get("tipo").contains("4")) {
+                    item = new Elemento("https://cdn-reichelt.de/bilder/web/xxl_ws/D500/LCR_12V_72P_02.png", hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
+                    arraydir.add(item);
+                }
             }
 
             lista.setAdapter(adaptador);

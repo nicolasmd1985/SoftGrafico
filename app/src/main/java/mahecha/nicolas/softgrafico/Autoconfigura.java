@@ -165,6 +165,11 @@ public class Autoconfigura extends Fragment {
 
                }
 
+            queryValues.put("id_dispositivo", "BATERIA");
+            queryValues.put("nombre", "BATERIA");
+            controller.inserdispo(queryValues);
+
+
 
         }
 

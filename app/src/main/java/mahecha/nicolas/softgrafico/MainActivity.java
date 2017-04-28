@@ -142,6 +142,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_gallery) {
 
+            ListaDispositivos map = new ListaDispositivos();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.principal,map, "tag");
+            ft.addToBackStack("tag");
+            ft.commit();
+
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -271,6 +277,39 @@ public class MainActivity extends AppCompatActivity
                 transiction.replace(R.id.lista, fragmento);
                 transiction.commit();
             }
+
+            if (split[i].contains("ACTIVA")) {
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
+                mp.start();
+                queryValues = new HashMap<String, String>();
+                sSubCadena = split[i].substring(split[i].length() - 7, split[i].length());
+                queryValues.put("id_dispositivo", sSubCadena);
+                queryValues.put("fecha", tiempo());
+                queryValues.put("tipo","3");
+                controller.inserevento(queryValues);
+                ListaEventos fragmento = new ListaEventos();
+                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
+                transiction.replace(R.id.lista, fragmento);
+                transiction.commit();
+            }
+
+            if (split[i].contains("AVERIA") && split[i].contains("BATERIAS")) {
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
+                mp.start();
+                queryValues = new HashMap<String, String>();
+                sSubCadena = split[i].substring(split[i].length() - 7, split[i].length());
+                queryValues.put("id_dispositivo", "BATERIA");
+                queryValues.put("fecha", tiempo());
+                queryValues.put("tipo","4");
+                controller.inserevento(queryValues);
+                ListaEventos fragmento = new ListaEventos();
+                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
+                transiction.replace(R.id.lista, fragmento);
+                transiction.commit();
+            }
+
+
+
 
             }
 
