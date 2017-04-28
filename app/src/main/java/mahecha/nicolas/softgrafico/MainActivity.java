@@ -4,12 +4,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
@@ -33,6 +36,9 @@ public class MainActivity extends AppCompatActivity
     private MiTareaAsincrona tareaP;
     String resultado;
     DBController controller = new DBController(this);
+    HashMap<String, String> queryValues;
+
+    EnvioDatos envioDatos = new EnvioDatos(this);
 
 
 
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
 
 
-        ListaDispositivos fragmento = new ListaDispositivos();
+        ListaEventos fragmento = new ListaEventos();
         FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
         transiction.replace(R.id.lista,fragmento);
         transiction.commit();
@@ -129,7 +135,7 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
 
 
-            ListaDispositivos fragmento = new ListaDispositivos();
+            ListaEventos fragmento = new ListaEventos();
             FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
             transiction.replace(R.id.lista,fragmento);
             transiction.commit();
@@ -202,7 +208,8 @@ public class MainActivity extends AppCompatActivity
                     if(!resultado.contentEquals(""))
                     {
                         saltos();
-//                        enviar();
+                        envioDatos.enviar(resultado);
+
                     }
                     mServiceIBinder.cleanr();
                 }
@@ -232,15 +239,42 @@ public class MainActivity extends AppCompatActivity
         StringBuilder sb = new StringBuilder();
         String sSubCadena = "";
 
-        Toast.makeText(this,resultado,Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,resultado,Toast.LENGTH_LONG).show();
+  try{
         for (int i = 0; i < split.length; i++) {
             if (split[i].contains("AVERIA")) {
-                ArrayList<HashMap<String, String>> userList = controller.getUsers();
-                sSubCadena = split[i].substring(split[i].length()-7,split[i].length());
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
+                mp.start();
+                queryValues = new HashMap<String, String>();
+                sSubCadena = split[i].substring(split[i].length() - 7, split[i].length());
+                queryValues.put("id_dispositivo", sSubCadena);
+                queryValues.put("fecha", tiempo());
+                queryValues.put("tipo","1");
+                controller.inserevento(queryValues);
+                ListaEventos fragmento = new ListaEventos();
+                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
+                transiction.replace(R.id.lista, fragmento);
+                transiction.commit();
+            }
+
+            if (split[i].contains("ALARM:")) {
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
+                mp.start();
+                queryValues = new HashMap<String, String>();
+                sSubCadena = split[i].substring(split[i].length() - 7, split[i].length());
+                queryValues.put("id_dispositivo", sSubCadena);
+                queryValues.put("fecha", tiempo());
+                queryValues.put("tipo","2");
+                controller.inserevento(queryValues);
+                ListaEventos fragmento = new ListaEventos();
+                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
+                transiction.replace(R.id.lista, fragmento);
+                transiction.commit();
+            }
 
             }
 
-        }
+        }catch(Exception e){}
     }
 
     /////////*******TAREA LARGA*********/////////
@@ -250,6 +284,18 @@ public class MainActivity extends AppCompatActivity
         try {
             Thread.sleep(10000);
         } catch(InterruptedException e) {}
+    }
+
+
+
+    ////////////////////***************OBTIENE TIEMPO**************///////////////////
+    public String tiempo()
+    {
+        Date date = new Date();
+        CharSequence s  = DateFormat.format("d/M/yyyy H:m", date.getTime());
+        // System.out.println (s);
+        String time = s.toString();
+        return time ;
     }
 
 

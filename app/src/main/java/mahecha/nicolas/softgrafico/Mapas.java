@@ -2,10 +2,15 @@ package mahecha.nicolas.softgrafico;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,13 +18,20 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import java.io.File;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Mapas extends Fragment {
+
+    RelativeLayout relativeLayout,relative2;
+    View v;
 
 
     public Mapas() {
@@ -31,9 +43,11 @@ public class Mapas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_mapas, container, false);
-        RelativeLayout relativeLayout = (RelativeLayout)v.findViewById(R.id.rect);
+        v =  inflater.inflate(R.layout.fragment_mapas, container, false);
+        relativeLayout = (RelativeLayout)v.findViewById(R.id.rect);
         relativeLayout.addView(new ZoomView(getActivity()));
+
+
         return  v;
     }
 
@@ -42,7 +56,7 @@ public class Mapas extends Fragment {
 
         //These two constants specify the minimum and maximum zoom
         private  float MIN_ZOOM = 1f;
-        private  float MAX_ZOOM = 5f;
+        private  float MAX_ZOOM = 10f;
 
         private float scaleFactor = 1.f;
         private ScaleGestureDetector detector;
@@ -82,10 +96,19 @@ public class Mapas extends Fragment {
             detector = new ScaleGestureDetector(getContext(), new ScaleListener());
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
-            displayWidth = display.getWidth();
-            displayHeight = display.getHeight();
+            displayWidth = 1000 ;
+            displayHeight = 600;
 
-            mImage = getResources().getDrawable(R.drawable.pb2);
+
+            File path = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES);
+            File file = new File(path, "magno2.jpg");
+            Bitmap bMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            //imagen.setImageBitmap(bMap);
+
+            mImage = new BitmapDrawable(bMap);
+
+           // mImage = getResources().getDrawable(R.drawable.magno2);
 
         }
 
@@ -96,10 +119,6 @@ public class Mapas extends Fragment {
 
                 case MotionEvent.ACTION_DOWN:
                     mode = DRAG;
-
-                    //We assign the current X and Y coordinate of the finger to startX and startY minus the previously translated
-                    //amount for each coordinates This works even when we are translating the first time because the initial
-                    //values for these two variables is zero.
                     startX = event.getX() - previousTranslateX;
                     startY = event.getY() - previousTranslateY;
                     break;
@@ -108,9 +127,6 @@ public class Mapas extends Fragment {
 
                     translateX = event.getX() - startX;
                     translateY = event.getY() - startY;
-
-                    //We cannot use startX and startY directly because we have adjusted their values using the previous translation values.
-                    //This is why we need to add those values to startX and startY so that we can get the actual coordinates of the finger.
                     double distance = Math.sqrt(Math.pow(event.getX() - (startX + previousTranslateX), 2) +
                             Math.pow(event.getY() - (startY + previousTranslateY), 2)
                     );
@@ -127,19 +143,13 @@ public class Mapas extends Fragment {
 
                 case MotionEvent.ACTION_UP:
                     mode = NONE;
-                    dragged = false;
 
-                    //All fingers went up, so let's save the value of translateX and translateY into previousTranslateX and
-                    //previousTranslate
                     previousTranslateX = translateX;
                     previousTranslateY = translateY;
                     break;
 
                 case MotionEvent.ACTION_POINTER_UP:
                     mode = DRAG;
-
-                    //This is not strictly necessary; we save the value of translateX and translateY into previousTranslateX
-                    //and previousTranslateY when the second finger goes up
                     previousTranslateX = translateX;
                     previousTranslateY = translateY;
                     break;
@@ -147,16 +157,8 @@ public class Mapas extends Fragment {
 
             detector.onTouchEvent(event);
 
-            //We redraw the canvas only in the following cases:
-            //
-            // o The mode is ZOOM
-            //        OR
-            // o The mode is DRAG and the scale factor is not equal to 1 (meaning we have zoomed) and dragged is
-            //   set to true (meaning the finger has actually moved)
-            if ((mode == DRAG && scaleFactor != 1f && dragged) || mode == ZOOM) {
-                invalidate();
-            }
 
+            invalidate();
             return true;
         }
 
@@ -164,72 +166,14 @@ public class Mapas extends Fragment {
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            ///********DIMENSIONES EFECTIVAS********//////
-            int altoCa = getBottom();
-            int anchoCa = getRight();
-            float medioCa = (float) altoCa / anchoCa;
 
-            //**********DIMENSIONES DE LA IMAGEN///////
-            int altoIm = mImage.getIntrinsicHeight();
-            int anchoIm = mImage.getIntrinsicWidth();
-            float medioIm = (float) altoIm / anchoIm;
-
-            ///////////******ALGORITMO***//////////
-            int alto, ancho;
-            if (medioCa < medioIm) {
-                ancho = anchoCa;
-                alto = (int) (medioIm * ancho);
-            } else {
-                alto = altoCa;
-                ancho = (int) (alto / medioIm);
-            }
-
-
-            canvas.save();
-
-            //canvas.scale(2,2);
-
-            //We're going to scale the X and Y coordinates by the same amount
-            canvas.scale(scaleFactor, scaleFactor,displayWidth/2,displayHeight/2);
-
-
-
-
-            //If translateX times -1 is lesser than zero, let's set it to zero. This takes care of the left bound
-//            if ((translateX * -1) < 0) {
-//                translateX = 0;
-//            }
-//
-//            //This is where we take care of the right bound. We compare translateX times -1 to (scaleFactor - 1) * displayWidth.
-//            //If translateX is greater than that value, then we know that we've gone over the bound. So we set the value of
-//            //translateX to (1 - scaleFactor) times the display width. Notice that the terms are interchanged; it's the same
-//            //as doing -1 * (scaleFactor - 1) * displayWidth
-//            else if ((translateX * -1) > (scaleFactor - 1) * displayWidth) {
-//                translateX = (1 - scaleFactor) * displayWidth;
-//            }
-//
-//            if (translateY * -1 < 0) {
-//                translateY = 0;
-//            }
-//
-//            //We do the exact same thing for the bottom bound, except in this case we use the height of the display
-//            else if ((translateY * -1) > (scaleFactor - 1) * displayHeight) {
-//                translateY = (1 - scaleFactor) * displayHeight;
-//            }
-
-            //We need to divide by the scale factor here, otherwise we end up with excessive panning based on our zoom level
-            //because the translation amount also gets scaled according to how much we've zoomed into the canvas.
-            canvas.translate(translateX / scaleFactor, translateY / scaleFactor);
-
-
-            ////****PONER IMAGEN////////
             mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
+           // canvas.save();
+            canvas.scale(scaleFactor, scaleFactor,displayWidth/2,displayHeight/2);
+            canvas.translate(translateX / scaleFactor, translateY / scaleFactor);
+            ////****PONER IMAGEN////////
+
             mImage.draw(canvas);
-
-
-
-
-        /* The rest of your canvas-drawing code */
             canvas.restore();
         }
 

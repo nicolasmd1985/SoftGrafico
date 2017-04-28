@@ -3,15 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mahecha.nicolas.softgrafico.Mapas">
+    tools:context="mahecha.nicolas.softgrafico.Prueba">
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rect">
+        android:text="@string/hello_blank_fragment" />
 
-    </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher" />
 
 </FrameLayout>

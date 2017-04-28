@@ -1,6 +1,7 @@
 package mahecha.nicolas.softgrafico;
 
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -51,7 +52,7 @@ public class ListaDispositivos extends Fragment {
 
                 String nn = String.valueOf(arraydir.get(i).getTitulo());
                 Toast.makeText(getContext(),nn,Toast.LENGTH_LONG).show();
-                controller.dipsup(nn);
+                //controller.dipsup(nn);
                 refresh();
             }
         });
