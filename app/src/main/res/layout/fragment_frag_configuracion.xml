@@ -17,10 +17,11 @@
             android:layout_height="wrap_content"
             android:text="Configuracion del Sistema"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textStyle="bold|italic" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/autoconf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -28,31 +29,24 @@
             android:text="Auto Configuracion" />
 
         <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Subir Planos" />
-
-        <Button
-            android:id="@+id/button3"
+            android:id="@+id/asigsensor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Asignar Sensores a Planos" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/possensor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Posicionar sensores" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/manualconf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Cnfiguracion Manual" />
+            android:text="Configuracion Manual" />
     </LinearLayout>
 </FrameLayout>

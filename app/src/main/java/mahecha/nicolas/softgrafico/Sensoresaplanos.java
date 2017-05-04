@@ -1,20 +1,23 @@
 package mahecha.nicolas.softgrafico;
 
 
-import android.app.Fragment;
-import android.media.MediaPlayer;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-
+import android.app.Fragment;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import mahecha.nicolas.softgrafico.Adaptador.Adaptador;
 import mahecha.nicolas.softgrafico.Adaptador.Elemento;
@@ -24,15 +27,18 @@ import mahecha.nicolas.softgrafico.Sqlite.DBController;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListaDispositivos extends Fragment {
+public class Sensoresaplanos extends Fragment {
 
-    ListView lista;
+
+    ListView listadispo;
     ArrayList<Elemento> arraydir;
     DBController controller;
     Adaptador adaptador;
+    File[] lista;
+    List<String> listItems;
 
 
-    public ListaDispositivos() {
+    public Sensoresaplanos() {
         // Required empty public constructor
     }
 
@@ -41,23 +47,42 @@ public class ListaDispositivos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v=  inflater.inflate(R.layout.lista_dispositivos, container, false);
-        lista = (ListView)v.findViewById(R.id.recep);
+        View v = inflater.inflate(R.layout.fragment_sensoresaplanos, container, false);
+
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        lista= path.listFiles();
+        listItems = new ArrayList<String>();
+
+        for(int i=0;i<lista.length;i++) {
+            //Toast.makeText(getActivity(), lista[i].toString(), Toast.LENGTH_LONG).show();
+            listItems.add(lista[i].toString());
+
+        }
+
+        listadispo = (ListView)v.findViewById(R.id.asigpla);
 
         controller = new DBController(getActivity());
         arraydir = new ArrayList<Elemento>();
         geteventos();
 
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listadispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
-
                 String nn = String.valueOf(arraydir.get(i).getTitulo());
                 Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                //controller.dipsup(nn);
-                //refresh();
+                showSimplePopUp();
             }
         });
+
+//        listadispo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                String nn = String.valueOf(arraydir.get(i).getidop());
+//                Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//        });
 
         return v;
     }
@@ -106,11 +131,32 @@ public class ListaDispositivos extends Fragment {
 
         }
 
-        lista.setAdapter(adaptador);
+        listadispo.setAdapter(adaptador);
 
 
 
 
+    }
+
+
+
+    ///////////******************POP UP**************//////////////
+    private void showSimplePopUp() {
+
+        final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
+
+        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(getActivity());
+
+        helpBuilder.setTitle(R.string.pick_color).setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                });
+
+
+        AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
     }
 
 

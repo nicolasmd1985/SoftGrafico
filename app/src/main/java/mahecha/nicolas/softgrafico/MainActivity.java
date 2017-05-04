@@ -1,5 +1,7 @@
 package mahecha.nicolas.softgrafico;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
+
 import android.text.format.DateFormat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import android.app.Fragment;
 
 import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
@@ -39,6 +42,17 @@ public class MainActivity extends AppCompatActivity
     HashMap<String, String> queryValues;
 
     EnvioDatos envioDatos = new EnvioDatos(this);
+
+    ////////////***FRAGMENTOS***///////////////
+    public Mapas mapas = new Mapas();
+    public ListaEventos listaEventos = new ListaEventos();
+    public ListaDispositivos listaDispositivos = new ListaDispositivos();
+    public FragConfiguracion fragConfiguracion = new FragConfiguracion();
+
+
+   ////////////*******MANAGER**********////////////
+    FragmentManager fm;
+    FragmentTransaction ft;
 
 
 
@@ -67,22 +81,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        ////////////////FRAGMENTOS DE INICIO/////////////
-        Mapas map = new Mapas();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.principal,map, "tag");
-        ft.addToBackStack("tag");
-        ft.commit();
-
-
-        ListaEventos fragmento = new ListaEventos();
-        FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
-        transiction.replace(R.id.lista,fragmento);
-        transiction.commit();
-
-
-
+        fm = getFragmentManager();
+        fm.beginTransaction().add(R.id.lista,listaEventos).add(R.id.principal,mapas).commit();
 
 
 
@@ -128,46 +128,41 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
 
-            Mapas map = new Mapas();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.principal,map, "tag");
-            ft.addToBackStack("tag");
-            ft.commit();
-
-
-            ListaEventos fragmento = new ListaEventos();
-            FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
-            transiction.replace(R.id.lista,fragmento);
-            transiction.commit();
+            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+            fm.executePendingTransactions();
+            fm.beginTransaction().replace(R.id.principal,mapas).replace(R.id.lista,listaEventos).commit();
 
         } else if (id == R.id.nav_gallery) {
 
-            ListaDispositivos map = new ListaDispositivos();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.principal,map, "tag");
-            ft.addToBackStack("tag");
-            ft.commit();
-
+            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+            fm.executePendingTransactions();
+            fm.beginTransaction().replace(R.id.principal,mapas).replace(R.id.lista,listaDispositivos).commit();
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-            FragConfiguracion map = new FragConfiguracion();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.principal,map, "tag");
-            ft.addToBackStack("tag");
-            ft.commit();
+
+            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+            fm.executePendingTransactions();
+            fm.beginTransaction().replace(R.id.principal,fragConfiguracion).commit();
 
 
         } else if (id == R.id.nav_share) {
-            tareaP.cancel(true);
-            mServiceIBinder.onDestroy();
+            try {
+                tareaP.cancel(true);
+                mServiceIBinder.onDestroy();
+            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
         } else if (id == R.id.nav_send) {
+
             Intent intent = new Intent(this, MiServiceIBinder.class);
             this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
             tareaP = new MiTareaAsincrona();
             tareaP.execute();
+
 
         }
 
@@ -248,6 +243,7 @@ public class MainActivity extends AppCompatActivity
 //        Toast.makeText(this,resultado,Toast.LENGTH_LONG).show();
   try{
         for (int i = 0; i < split.length; i++) {
+
             if (split[i].contains("AVERIA")) {
                 MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
                 mp.start();
@@ -257,10 +253,12 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","1");
                 controller.inserevento(queryValues);
-                ListaEventos fragmento = new ListaEventos();
-                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
-                transiction.replace(R.id.lista, fragmento);
-                transiction.commit();
+
+                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.executePendingTransactions();
+                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+
             }
 
             if (split[i].contains("ALARM:")) {
@@ -272,10 +270,11 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","2");
                 controller.inserevento(queryValues);
-                ListaEventos fragmento = new ListaEventos();
-                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
-                transiction.replace(R.id.lista, fragmento);
-                transiction.commit();
+                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.executePendingTransactions();
+                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+
             }
 
             if (split[i].contains("ACTIVA")) {
@@ -287,10 +286,11 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","3");
                 controller.inserevento(queryValues);
-                ListaEventos fragmento = new ListaEventos();
-                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
-                transiction.replace(R.id.lista, fragmento);
-                transiction.commit();
+                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.executePendingTransactions();
+                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+
             }
 
             if (split[i].contains("AVERIA") && split[i].contains("BATERIAS")) {
@@ -302,10 +302,10 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","4");
                 controller.inserevento(queryValues);
-                ListaEventos fragmento = new ListaEventos();
-                FragmentTransaction transiction = getSupportFragmentManager().beginTransaction();
-                transiction.replace(R.id.lista, fragmento);
-                transiction.commit();
+                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.executePendingTransactions();
+                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
             }
 
 

@@ -1,9 +1,11 @@
 package mahecha.nicolas.softgrafico;
 
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,14 @@ import mahecha.nicolas.softgrafico.Sqlite.DBController;
  */
 public class FragConfiguracion extends Fragment {
 
-    Button Autoconfig;
+    ////////////*******MANAGER**********////////////
+    FragmentManager fm;
+
+
+
+
+
+    Button Autoconfig,asigsensor;
     private MiServiceIBinder mServiceIBinder;
 
 
@@ -34,19 +43,29 @@ public class FragConfiguracion extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_frag_configuracion, container, false);
         final DBController controller = new DBController(getActivity());
-        Autoconfig = (Button)v.findViewById(R.id.button);
+        Autoconfig = (Button)v.findViewById(R.id.autoconf);
+        fm = getFragmentManager();
+
+
         Autoconfig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Autoconfigura buffer = new Autoconfigura();
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.lista,buffer, "tag");
-                ft.addToBackStack("tag");
-                ft.commit();
+                fm.beginTransaction().replace(R.id.principal,buffer).commit();
 
             }
 
+        });
+
+        asigsensor = (Button)v.findViewById(R.id.asigsensor);
+        asigsensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Sensoresaplanos asigsensor = new Sensoresaplanos();
+                fm.beginTransaction().replace(R.id.principal,asigsensor).commit();
+            }
         });
 
         return v;

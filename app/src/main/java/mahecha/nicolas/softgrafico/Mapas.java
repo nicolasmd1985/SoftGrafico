@@ -1,6 +1,7 @@
 package mahecha.nicolas.softgrafico;
 
 
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
+
 import android.text.Layout;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -102,7 +103,7 @@ public class Mapas extends Fragment {
 
             File path = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_PICTURES);
-            File file = new File(path, "magno2.jpg");
+            File file = new File(path, "piso2.jpg");
             Bitmap bMap = BitmapFactory.decodeFile(file.getAbsolutePath());
             //imagen.setImageBitmap(bMap);
 

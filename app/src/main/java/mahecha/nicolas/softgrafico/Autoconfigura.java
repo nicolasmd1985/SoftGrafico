@@ -1,6 +1,7 @@
 package mahecha.nicolas.softgrafico;
 
 
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,7 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,8 @@ public class Autoconfigura extends Fragment {
         Buffertex2 = (TextView)v.findViewById(R.id.buffer2);
         controller = new DBController(getActivity());
 
-        Intent intent = new Intent(getContext(), MiServiceIBinder.class);
-        getContext().bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(getActivity(), MiServiceIBinder.class);
+        getActivity().bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
 
 
         tarea1 = new MiTareaAsincrona();
@@ -124,58 +125,45 @@ public class Autoconfigura extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             if(result)
-                Toast.makeText(getContext(), "Tarea finalizada!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Tarea finalizada!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected void onCancelled() {
-            Toast.makeText(getContext(), "Tarea cancelada!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Tarea cancelada!", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     public void saltos() {
         String[] split = resultado.split("\n");
-        StringBuilder sb = new StringBuilder();
-        int num=0;
         String sSubCadena = "";
         String sSubCadena2 = "";
 
 
         for (int i = 0; i < split.length; i++) {
-            //sb.append(split[i]);
-//            if (i != split.length - 1) {
-//                sb.append(" ");
-//            }
 
+            try {
                if (split[i].contains("NORMAL")) {
                    queryValues = new HashMap<String, String>();
                    sSubCadena = split[i].substring(split[i].length()-7,split[i].length());
                    sSubCadena2 = split[i].substring(7,49);
-//                   queryValues.put("id_dispositivo", split[i].substring(split[i].length() - 7, split[i].length()).toString());
-//                   queryValues.put("nombre", split[i].substring(7, 49).toString());
-
                     queryValues.put("id_dispositivo", sSubCadena);
                     queryValues.put("nombre", sSubCadena2);
-
                    controller.inserdispo(queryValues);
-                   //sb.append(i+" "+split[i]+"\n");
-                   //sSubCadena = sSubCadena+" "+split[i].substring(split[i].length()-7,split[i].length())+"\n";
-                   //sSubCadena2 = sSubCadena2+" "+split[i].substring(7,49)+"\n";
-
                }
 
-            queryValues.put("id_dispositivo", "BATERIA");
-            queryValues.put("nombre", "BATERIA");
-            controller.inserdispo(queryValues);
-
+                queryValues.put("id_dispositivo", "BATERIA");
+                queryValues.put("nombre", "BATERIA");
+                controller.inserdispo(queryValues);
+            }catch (Exception e){Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG).show();}
 
 
         }
 
-
             ArrayList<HashMap<String, String>> userList = controller.getUsers();
-            if (userList.size() != 0) {
+        try {
+        if (userList.size() != 0) {
                 String ids = "";
                 String nombres ="";
                 for (HashMap<String, String> hashMap : userList) {
@@ -188,9 +176,10 @@ public class Autoconfigura extends Fragment {
                 Buffertext.setText(ids+" "+nombres);
             }
 
-            tarea1.cancel(true);
-            mServiceIBinder.onDestroy();
-
+//
+                tarea1.cancel(true);
+                mServiceIBinder.onDestroy();
+            }catch (Exception e){Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG).show();}
     }
 
     // CONFIGURACION INTERFACE SERVICECONNECTION IBINDER
