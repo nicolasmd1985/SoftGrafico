@@ -36,6 +36,7 @@ public class Sensoresaplanos extends Fragment {
     Adaptador adaptador;
     File[] lista;
     List<String> listItems;
+    HashMap<String, String> queryValues;
 
 
     public Sensoresaplanos() {
@@ -70,8 +71,8 @@ public class Sensoresaplanos extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
                 String nn = String.valueOf(arraydir.get(i).getTitulo());
-                Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                showSimplePopUp();
+                //Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
+                showSimplePopUp(nn);
             }
         });
 
@@ -105,25 +106,26 @@ public class Sensoresaplanos extends Fragment {
 
 
                 if(hashMap.get("nombre").contains("HUMO")) {
-                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "Pruebas", "1");
+                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1");
                     arraydir.add(item);
                 }
-                if(hashMap.get("nombre").contains("SUPRV")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "Pruebas", "1");
+                else if(hashMap.get("nombre").contains("SUPRV")) {
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
                     arraydir.add(item);
                 }
-                if(hashMap.get("nombre").contains("PULSADOR") && hashMap.get("nombre").contains("MONITOR")) {
-                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "Pruebas", "1");
+                else if(hashMap.get("nombre").contains("MONITOR") && hashMap.get("nombre").contains("PULSADOR")) {
+                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
                     arraydir.add(item);
                 }
-                if(hashMap.get("nombre").contains("MONITOR") && hashMap.get("nombre").contains("DIRECCION")) {
-                    item = new Elemento(monitor, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "Pruebas", "1");
+                else if(hashMap.get("nombre").contains("BATERIA")) {
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
                     arraydir.add(item);
                 }
-                if(hashMap.get("nombre").contains("BATERIA")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "Pruebas", "1");
+                else if(hashMap.get("nombre").contains("MONITOR")) {
+                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
                     arraydir.add(item);
                 }
+
 
 
             }
@@ -141,16 +143,22 @@ public class Sensoresaplanos extends Fragment {
 
 
     ///////////******************POP UP**************//////////////
-    private void showSimplePopUp() {
-
+    private void showSimplePopUp(final String id_dispositivo) {
+        queryValues = new HashMap<String, String>();
         final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
+         AlertDialog.Builder helpBuilder = new AlertDialog.Builder(getActivity());
+        controller = new DBController(getActivity());
 
-        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(getActivity());
-
-        helpBuilder.setTitle(R.string.pick_color).setItems(items, new DialogInterface.OnClickListener() {
+        helpBuilder.setTitle(R.string.selectplano).setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
-
+                        //Toast.makeText(getActivity(),items[which],Toast.LENGTH_LONG).show();
+                        queryValues.put("id_dispositivo", id_dispositivo);
+                        queryValues.put("plano", items[which].toString());
+                        try {
+                            controller.updipsp(queryValues);
+                        }catch (Exception e) {
+                           // Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 

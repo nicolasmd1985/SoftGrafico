@@ -32,7 +32,7 @@ public class EnvioDatos {
     {
 
         queryValues = new HashMap<String, String>();
-        queryValues.put("fkidusuario", "3");
+        queryValues.put("fkidusuario", "4");
         queryValues.put("reporte", String.valueOf(resultado));
         queryValues.put("tiempo", tiempo());
         enviarepo();

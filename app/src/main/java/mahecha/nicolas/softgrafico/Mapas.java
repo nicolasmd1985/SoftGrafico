@@ -101,13 +101,21 @@ public class Mapas extends Fragment {
             displayHeight = 600;
 
 
-            File path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES);
-            File file = new File(path, "piso2.jpg");
-            Bitmap bMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+//            File path = Environment.getExternalStoragePublicDirectory(
+//                    Environment.DIRECTORY_PICTURES);
+//            File file = new File(path, "piso2.jpg");
+          //  Bitmap bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
             //imagen.setImageBitmap(bMap);
 
-            mImage = new BitmapDrawable(bMap);
+
+            if(getArguments().getString("plano") != null) {
+                Bitmap bMap = BitmapFactory.decodeFile(getArguments().getString("plano"));
+                mImage = new BitmapDrawable(bMap);
+            }else{
+                Bitmap bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
+                mImage = new BitmapDrawable(bMap);}
+
+//            mImage = new BitmapDrawable(bMap);
 
            // mImage = getResources().getDrawable(R.drawable.magno2);
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public class DBController extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT id_dispositivo, nombre FROM dispositivo";
+        String selectQuery = "SELECT id_dispositivo,nombre,plano FROM dispositivo";
 
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -94,6 +95,7 @@ public class DBController extends SQLiteOpenHelper {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id_dispositivo", cursor.getString(0));
                 map.put("nombre", cursor.getString(1));
+                map.put("plano", cursor.getString(2));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -102,7 +104,7 @@ public class DBController extends SQLiteOpenHelper {
     }
 
 
-//////////////////////************************ACTUALIZAR DISPOSITIVOS*********/////////////////
+//////////////////////************************ACTUALIZAR NOMBRE DISPOSITIVOS*********/////////////////
     /**
      * Inserts User into SQLite DB
      * @param queryValues
@@ -111,13 +113,9 @@ public class DBController extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("codigoscan", queryValues.get("codigo"));
         values.put("nombre", queryValues.get("nombre"));
-        values.put("descripcion", queryValues.get("descripcion"));
-
-        String id =  "'"+queryValues.get("codigo")+"'";
-
-        database.update("dispositivos", values ,"codigoscan"+"="+id, null);
+        String id =  "'"+queryValues.get("id_dispositivo")+"'";
+        database.update("dispositivo", values ,"id_dispositivo"+"="+id, null);
         database.close();
     }
 
@@ -197,4 +195,21 @@ public class DBController extends SQLiteOpenHelper {
         database.update("eventos", values ,"id_evento ='"+id_event+"'", null);
         database.close();
     }
+
+
+//////////////////////************************ACTUALIZAR NOMBRE DISPOSITIVOS*********/////////////////
+    /**
+     * Inserts User into SQLite DB
+     * @param queryValues
+     */
+    public void updipsp(HashMap<String, String> queryValues) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("plano", queryValues.get("plano"));
+        String id =  "'"+queryValues.get("id_dispositivo")+"'";
+        database.update("dispositivo", values ,"id_dispositivo"+"="+id, null);
+        database.close();
+    }
+
 }

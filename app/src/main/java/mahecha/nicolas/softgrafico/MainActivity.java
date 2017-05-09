@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,12 +64,19 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
+                Intent intent = new Intent(MainActivity.this, MiServiceIBinder.class);
+                MainActivity.this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
+                tareaP = new MiTareaAsincrona();
+                tareaP.execute();
+                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
+
             }
         });
 
@@ -82,6 +90,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fm = getFragmentManager();
+        Bundle bundle = new Bundle();
+        bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
+        mapas.setArguments(bundle);
         fm.beginTransaction().add(R.id.lista,listaEventos).add(R.id.principal,mapas).commit();
 
 
@@ -144,6 +155,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
+//            try {
+//                tareaP.cancel(true);
+//                mServiceIBinder.onDestroy();
+//            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
+
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
             fm.executePendingTransactions();
@@ -158,10 +174,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-            Intent intent = new Intent(this, MiServiceIBinder.class);
-            this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
-            tareaP = new MiTareaAsincrona();
-            tareaP.execute();
+
 
 
         }
