@@ -41,7 +41,6 @@ public class Mapas extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -49,7 +48,6 @@ public class Mapas extends Fragment {
         mImage = null;
         bMap = null;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,39 +67,28 @@ public class Mapas extends Fragment {
         //These two constants specify the minimum and maximum zoom
         private  float MIN_ZOOM = 1f;
         private  float MAX_ZOOM = 10f;
-
         private float scaleFactor = 1.f;
         private ScaleGestureDetector detector;
-
         //These constants specify the mode that we're in
         private  int NONE = 0;
         private  int DRAG = 1;
         private  int ZOOM = 2;
-
         private int mode;
-
         //These two variables keep track of the X and Y coordinate of the finger when it first
         //touches the screen
         private float startX = 0f;
         private float startY = 0f;
-
         //These two variables keep track of the amount we need to translate the canvas along the X
         //and the Y coordinate
         private float translateX = 0f;
         private float translateY = 0f;
-
         //These two variables keep track of the amount we translated the X and Y coordinates, the last time we
         //panned.
         private float previousTranslateX = 0f;
         private float previousTranslateY = 0f;
-
-
         private boolean dragged = false;
         private float displayWidth;
         private float displayHeight;
-
-
-
 
         public ZoomView(Context context) {
             super(context);
@@ -110,31 +97,13 @@ public class Mapas extends Fragment {
             Display display = wm.getDefaultDisplay();
             displayWidth = 1000 ;
             displayHeight = 600;
-
-
-//            File path = Environment.getExternalStoragePublicDirectory(
-//                    Environment.DIRECTORY_PICTURES);
-//            File file = new File(path, "piso2.jpg");
-          //  Bitmap bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
-            //imagen.setImageBitmap(bMap);
-
-
-
             if(getArguments().getString("plano") != null) {
                 bMap = BitmapFactory.decodeFile(getArguments().getString("plano"));
-
-
             }else{
+
                 bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
-
              }
-
-//            mImage = new BitmapDrawable(bMap);
-
-           // mImage = getResources().getDrawable(R.drawable.magno2);
             mImage = new BitmapDrawable(bMap);
-
-
         }
 
         @Override
@@ -191,19 +160,12 @@ public class Mapas extends Fragment {
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-
-
-             mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
-           // canvas.save();
+            mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
             canvas.scale(scaleFactor, scaleFactor,displayWidth/2,displayHeight/2);
             canvas.translate(translateX / scaleFactor, translateY / scaleFactor);
             ////****PONER IMAGEN////////
-
             mImage.draw(canvas);
-
             canvas.restore();
-
-
 
         }
 

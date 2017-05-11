@@ -64,7 +64,7 @@ public class FragConfiguracion extends Fragment {
             public void onClick(View view) {
 
                 Sensoresaplanos asigsensor = new Sensoresaplanos();
-                fm.beginTransaction().replace(R.id.principal,asigsensor).commit();
+                fm.beginTransaction().replace(R.id.principal,asigsensor,"asigsensor").commit();
             }
         });
 

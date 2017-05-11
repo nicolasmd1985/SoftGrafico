@@ -2,6 +2,7 @@ package mahecha.nicolas.softgrafico;
 
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -37,6 +38,7 @@ public class Sensoresaplanos extends Fragment {
     File[] lista;
     List<String> listItems;
     HashMap<String, String> queryValues;
+    Fragment aux;
 
 
     public Sensoresaplanos() {
@@ -159,6 +161,7 @@ public class Sensoresaplanos extends Fragment {
                         }catch (Exception e) {
                            // Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                         }
+                        refresh();
                     }
                 });
 
@@ -167,7 +170,15 @@ public class Sensoresaplanos extends Fragment {
         helpDialog.show();
     }
 
-
+    public void refresh()
+    {
+        aux =null;
+        aux = getFragmentManager().findFragmentByTag("asigsensor");
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(aux);
+        ft.attach(aux);
+        ft.commit();
+    }
 
 
 }

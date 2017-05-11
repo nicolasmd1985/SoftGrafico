@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity
 
    ////////////*******MANAGER**********////////////
     FragmentManager fm;
-    FragmentTransaction ft;
-
-    Fragment aux,aux2;
 
     ////////////*******FAB*******//////////
 
