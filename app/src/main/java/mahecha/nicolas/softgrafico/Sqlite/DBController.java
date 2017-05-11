@@ -161,7 +161,7 @@ public class DBController extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT eventos.id_evento,eventos.id_dispositivo,eventos.fecha,eventos.tipo,dispositivo.nombre FROM eventos INNER JOIN dispositivo ON eventos.id_dispositivo = dispositivo.id_dispositivo WHERE activado = 1 ";
+        String selectQuery = "SELECT eventos.id_evento,eventos.id_dispositivo,eventos.fecha,eventos.tipo,dispositivo.nombre,dispositivo.plano FROM eventos INNER JOIN dispositivo ON eventos.id_dispositivo = dispositivo.id_dispositivo WHERE activado = 1 ";
 
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -174,6 +174,7 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("fecha", cursor.getString(2));
                 map.put("tipo", cursor.getString(3));
                 map.put("nombre", cursor.getString(4));
+                map.put("plano", cursor.getString(5));
 
 
                 wordList.add(map);
@@ -189,7 +190,7 @@ public class DBController extends SQLiteOpenHelper {
     public void upstado(String id_event) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
+        Toast.makeText(contexto,"entra",Toast.LENGTH_LONG).show();
         values.put("activado","0");
 
         database.update("eventos", values ,"id_evento ='"+id_event+"'", null);

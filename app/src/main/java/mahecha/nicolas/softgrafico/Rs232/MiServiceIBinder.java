@@ -91,6 +91,9 @@ public class MiServiceIBinder extends Service {
 
 		uartInterface.SetConfig(baudRate, dataBit, stopBit, parity, flowControl);
 
+
+
+
 		return iBinder;
 	}
 	
@@ -98,6 +101,7 @@ public class MiServiceIBinder extends Service {
 	@Override
     public void onDestroy(){
         Toast.makeText(this, "Service finalizado", Toast.LENGTH_SHORT).show();
+
     }
 
 	

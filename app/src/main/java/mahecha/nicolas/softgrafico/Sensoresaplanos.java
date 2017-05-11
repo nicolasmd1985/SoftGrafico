@@ -106,23 +106,23 @@ public class Sensoresaplanos extends Fragment {
 
 
                 if(hashMap.get("nombre").contains("HUMO")) {
-                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1");
+                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("SUPRV")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR") && hashMap.get("nombre").contains("PULSADOR")) {
-                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("BATERIA")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR")) {
-                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
 

@@ -29,7 +29,7 @@ import android.app.Fragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListaEventos extends android.app.Fragment {
+public class ListaEventos extends Fragment {
 
     ListView lista;
     ArrayList<Elemento> arraydir;
@@ -37,16 +37,30 @@ public class ListaEventos extends android.app.Fragment {
     String alarma,averia,bateria,pulsador;
     ////////////*******MANAGER**********////////////
     FragmentManager fm;
+    Fragment aux;
+
+
+    View v;
 
     public ListaEventos() {
         // Required empty public constructor
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        v = null; // now cleaning up!
+        arraydir = null;
+        lista = null;
+       // bMap = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View  v = inflater.inflate(R.layout.fragment_lista_eventos, container, false);
+        v = inflater.inflate(R.layout.fragment_lista_eventos, container, false);
         lista = (ListView) v.findViewById(R.id.eventos);
         arraydir = new ArrayList<Elemento>();
         controller = new DBController(getActivity());
@@ -56,19 +70,19 @@ public class ListaEventos extends android.app.Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
-                String nn = String.valueOf(arraydir.get(i).getTitulo());
+                String nn = String.valueOf(arraydir.get(i).getidop());
                 Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                refresh();
+                cargamap(nn);
+                //refresh();
             }
         });
 
         lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String nn = String.valueOf(arraydir.get(i).getidop());
+                String nn = String.valueOf(arraydir.get(i).getIdeven());
                 Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 controller.upstado(nn);
-               // v.refreshDrawableState();
                 refresh();
                 return false;
             }
@@ -94,19 +108,19 @@ public class ListaEventos extends android.app.Fragment {
 
 
                 if(hashMap.get("tipo").contains("1") ) {
-                    item = new Elemento(alarma, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
+                    item = new Elemento(alarma, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
                 if(hashMap.get("tipo").contains("2")) {
-                    item = new Elemento(averia, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
+                    item = new Elemento(averia, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
                 if(hashMap.get("tipo").contains("3")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
                 if(hashMap.get("tipo").contains("4")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("id_evento"));
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
             }
@@ -118,8 +132,28 @@ public class ListaEventos extends android.app.Fragment {
 
     public void refresh()
     {
-        ListaEventos listaEventos = new ListaEventos();
-        fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+        aux =null;
+        aux = getFragmentManager().findFragmentByTag("listeven");
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(aux);
+        ft.attach(aux);
+        ft.commit();
     }
+
+
+    public void cargamap(String nn)
+    {
+        fm = getFragmentManager();
+        fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        aux = getFragmentManager().findFragmentByTag("mapas");
+        fm.beginTransaction().remove(aux).commit();
+        Bundle bundle = new Bundle();
+        bundle.putString("plano",nn);
+        aux = new Mapas();
+        aux.setArguments(bundle);
+        fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.principal,aux,"mapas").commit();
+        fm.executePendingTransactions();
+    }
+
 }

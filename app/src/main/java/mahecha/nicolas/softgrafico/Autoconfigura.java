@@ -116,7 +116,8 @@ public class Autoconfigura extends Fragment {
 
        ///////////////////***********ENTRA SI ENCUENTRA DATOS EN LA LISTA**********////////////
         try {
-            if (userList.size() != 0) {
+            if (userList.size()!= 0){
+             //   Toast.makeText(getActivity(),"entra x",Toast.LENGTH_LONG).show();
                 for (HashMap<String, String> hashMap : userList) {
 
                     for (int i = 0; i < split.length; i++) {
@@ -139,11 +140,9 @@ public class Autoconfigura extends Fragment {
                 }
 
 
-            }
-            ////////////************ENTRA UNA SOLA VEZ AL INICIAR EL AUTOCONFIG********/////////////
-            else {
+            }else {
                 for (int i = 0; i < split.length; i++) {
-
+                   // Toast.makeText(getActivity(),"entra y",Toast.LENGTH_LONG).show();
                     if (split[i].contains("NORMAL")) {
                         queryValues = new HashMap<String, String>();
                         sSubCadena = split[i].substring(split[i].length() - 7, split[i].length());

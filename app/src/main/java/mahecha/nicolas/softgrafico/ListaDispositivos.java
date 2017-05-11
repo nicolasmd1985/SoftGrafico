@@ -34,7 +34,9 @@ public class ListaDispositivos extends Fragment {
 
     ////////////*******MANAGER**********////////////
     FragmentManager fm;
-    Mapas maps;
+
+
+    Fragment aux;
 
 
     public ListaDispositivos() {
@@ -51,7 +53,7 @@ public class ListaDispositivos extends Fragment {
 
         controller = new DBController(getActivity());
         arraydir = new ArrayList<Elemento>();
-        maps = new Mapas();
+
         geteventos();
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -61,8 +63,7 @@ public class ListaDispositivos extends Fragment {
                 String nn = String.valueOf(arraydir.get(i).getValor());
                 Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 cargamap(nn);
-                //controller.dipsup(nn);
-                //refresh();
+
             }
         });
 
@@ -85,23 +86,23 @@ public class ListaDispositivos extends Fragment {
 
             for (HashMap<String, String> hashMap : userList) {
                if(hashMap.get("nombre").contains("HUMO")) {
-                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1");
+                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("SUPRV")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR") && hashMap.get("nombre").contains("PULSADOR")) {
-                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("BATERIA")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR")) {
-                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1");
+                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
                     arraydir.add(item);
                 }
          }
@@ -114,31 +115,20 @@ public class ListaDispositivos extends Fragment {
    public void cargamap(String nn)
    {
 
-//       ArrayList<HashMap<String, String>> userList = controller.getUsers();
-//       if (userList.size() != 0) {
-//           for (HashMap<String, String> hashMap : userList) {
-//
-//           }
-//       }
 
-      // fm.beginTransaction().remove(maps);
-      // fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
        fm = getFragmentManager();
        fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-       fm.beginTransaction().remove(maps).commit();
+       aux = getFragmentManager().findFragmentByTag("mapas");
+       fm.beginTransaction().remove(aux).commit();
        Bundle bundle = new Bundle();
        bundle.putString("plano",nn);
-       maps = new Mapas();
-       maps.setArguments(bundle);
+       aux = new Mapas();
+       aux.setArguments(bundle);
        fm = getFragmentManager();
-       fm.beginTransaction().replace(R.id.principal,maps).commit();
+       fm.beginTransaction().replace(R.id.principal,aux,"mapas").commit();
        fm.executePendingTransactions();
 
 
-
-
-
-//       fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
    }
 
 }

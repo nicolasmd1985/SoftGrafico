@@ -55,7 +55,12 @@ public class MainActivity extends AppCompatActivity
     FragmentManager fm;
     FragmentTransaction ft;
 
+    Fragment aux,aux2;
 
+    ////////////*******FAB*******//////////
+
+    FloatingActionButton fab;
+    int x=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,22 +68,22 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final Intent intent = new Intent(MainActivity.this, MiServiceIBinder.class);
+        tareaP = new MiTareaAsincrona();
+        MainActivity.this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
-                Intent intent = new Intent(MainActivity.this, MiServiceIBinder.class);
-                MainActivity.this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
                 tareaP = new MiTareaAsincrona();
                 tareaP.execute();
                 fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
-
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -93,9 +98,9 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
         mapas.setArguments(bundle);
-        fm.beginTransaction().add(R.id.lista,listaEventos).add(R.id.principal,mapas).commit();
-
-
+        fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal,mapas,"mapas").commit();
+        fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
+        tareaP.execute();
 
     }
 
@@ -111,23 +116,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -142,23 +140,23 @@ public class MainActivity extends AppCompatActivity
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
             fm.executePendingTransactions();
-            fm.beginTransaction().replace(R.id.principal,mapas).replace(R.id.lista,listaEventos).commit();
+            fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
 
         } else if (id == R.id.nav_gallery) {
 
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
             fm.executePendingTransactions();
-            fm.beginTransaction().replace(R.id.principal,mapas).replace(R.id.lista,listaDispositivos).commit();
+            fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaDispositivos,"listdispo").commit();
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-//            try {
-//                tareaP.cancel(true);
-//                mServiceIBinder.onDestroy();
-//            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
+           try {
+                tareaP.cancel(true);
+                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+           }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
@@ -168,15 +166,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
             try {
+                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
                 tareaP.cancel(true);
-                mServiceIBinder.onDestroy();
+                //mServiceIBinder.onDestroy();
             }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
         } else if (id == R.id.nav_send) {
-
-
-
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -268,9 +263,10 @@ public class MainActivity extends AppCompatActivity
                 controller.inserevento(queryValues);
 
                 fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
                 fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+
 
             }
 
@@ -284,9 +280,11 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("tipo","2");
                 controller.inserevento(queryValues);
                 fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
                 fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+
+
 
             }
 
@@ -300,9 +298,11 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("tipo","3");
                 controller.inserevento(queryValues);
                 fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
                 fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
+                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+
+
 
             }
 
@@ -316,15 +316,14 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("tipo","4");
                 controller.inserevento(queryValues);
                 fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(listaEventos).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
                 fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.lista,listaEventos).commit();
-            }
-
+                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
 
 
 
             }
+           }
 
         }catch(Exception e){}
     }
@@ -345,17 +344,9 @@ public class MainActivity extends AppCompatActivity
     {
         Date date = new Date();
         CharSequence s  = DateFormat.format("d/M/yyyy H:m", date.getTime());
-        // System.out.println (s);
         String time = s.toString();
         return time ;
     }
-
-
-
-
-
-
-
 
 
 }

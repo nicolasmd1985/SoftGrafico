@@ -32,11 +32,22 @@ import java.io.File;
 public class Mapas extends Fragment {
 
     RelativeLayout relativeLayout,relative2;
-    View v;
+    private View v;
+    Bitmap bMap;
+    Drawable mImage;
 
 
     public Mapas() {
         // Required empty public constructor
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        v = null; // now cleaning up!
+        mImage = null;
+        bMap = null;
     }
 
 
@@ -90,7 +101,7 @@ public class Mapas extends Fragment {
         private float displayHeight;
 
 
-        private Drawable mImage;
+
 
         public ZoomView(Context context) {
             super(context);
@@ -108,16 +119,21 @@ public class Mapas extends Fragment {
             //imagen.setImageBitmap(bMap);
 
 
+
             if(getArguments().getString("plano") != null) {
-                Bitmap bMap = BitmapFactory.decodeFile(getArguments().getString("plano"));
-                mImage = new BitmapDrawable(bMap);
+                bMap = BitmapFactory.decodeFile(getArguments().getString("plano"));
+
+
             }else{
-                Bitmap bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
-                mImage = new BitmapDrawable(bMap);}
+                bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
+
+             }
 
 //            mImage = new BitmapDrawable(bMap);
 
            // mImage = getResources().getDrawable(R.drawable.magno2);
+            mImage = new BitmapDrawable(bMap);
+
 
         }
 
@@ -176,14 +192,19 @@ public class Mapas extends Fragment {
             super.onDraw(canvas);
 
 
-            mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
+
+             mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
            // canvas.save();
             canvas.scale(scaleFactor, scaleFactor,displayWidth/2,displayHeight/2);
             canvas.translate(translateX / scaleFactor, translateY / scaleFactor);
             ////****PONER IMAGEN////////
 
             mImage.draw(canvas);
+
             canvas.restore();
+
+
+
         }
 
         private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {

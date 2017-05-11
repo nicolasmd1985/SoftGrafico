@@ -77,7 +77,9 @@ public class Adaptador extends BaseAdapter {
         TextView valor = (TextView) v.findViewById(R.id.valor);
         valor.setText(dir.getValor());
 
-
+//foto.setImageResource(dir.getImagen());
+        TextView idgd = (TextView) v.findViewById(R.id.idgd);
+        idgd.setText(dir.getidop());
 
         // DEVOLVEMOS VISTA
         return v;
