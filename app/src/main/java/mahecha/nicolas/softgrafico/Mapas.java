@@ -6,6 +6,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -33,8 +35,10 @@ public class Mapas extends Fragment {
 
     RelativeLayout relativeLayout,relative2;
     private View v;
-    Bitmap bMap;
-    Drawable mImage;
+    Bitmap bMap,bMap2,reziza;
+    Drawable mImage,mImage2;
+    Paint paint;
+
 
 
     public Mapas() {
@@ -56,8 +60,6 @@ public class Mapas extends Fragment {
         v =  inflater.inflate(R.layout.fragment_mapas, container, false);
         relativeLayout = (RelativeLayout)v.findViewById(R.id.rect);
         relativeLayout.addView(new ZoomView(getActivity()));
-
-
         return  v;
     }
 
@@ -94,16 +96,29 @@ public class Mapas extends Fragment {
             super(context);
             detector = new ScaleGestureDetector(getContext(), new ScaleListener());
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            displayWidth = 1000 ;
-            displayHeight = 600;
+
+
             if(getArguments().getString("plano") != null) {
                 bMap = BitmapFactory.decodeFile(getArguments().getString("plano"));
             }else{
 
-                bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
+                bMap = BitmapFactory.decodeFile("null");
+
              }
             mImage = new BitmapDrawable(bMap);
+
+
+
+            paint = new Paint();
+            //paint.se
+            //paint.setARGB(10,25,30,12);
+           // paint.
+            //bMap2 = BitmapFactory.decodeFile("android.resource://mahecha.nicolas.softgrafico/drawable/sensorhumo");
+            bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.averia);
+            mImage2 = getResources().getDrawable(R.drawable.averia);
+            reziza = getResizedBitmap(bMap2,50,50);
+
+
         }
 
         @Override
@@ -160,12 +175,19 @@ public class Mapas extends Fragment {
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
-            canvas.scale(scaleFactor, scaleFactor,displayWidth/2,displayHeight/2);
+           // mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
+            mImage.setBounds(0, 0, getWidth(), getHeight());
+            mImage2.setBounds(50, 50, 100, 100);
+           // mImage2.
+            canvas.scale(scaleFactor, scaleFactor,getWidth()/2,getHeight()/2);
             canvas.translate(translateX / scaleFactor, translateY / scaleFactor);
             ////****PONER IMAGEN////////
             mImage.draw(canvas);
-            canvas.restore();
+           // mImage2.draw(canvas);
+            canvas.drawBitmap(reziza,getWidth()/2,getHeight()/2,paint);
+           // canvas.d
+            //canvas.
+            //canvas.restore();
 
         }
 
@@ -178,6 +200,26 @@ public class Mapas extends Fragment {
             }
         }
     }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
+
+
+
 }
 
 

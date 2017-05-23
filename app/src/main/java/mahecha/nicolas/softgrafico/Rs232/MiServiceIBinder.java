@@ -14,8 +14,6 @@ import java.util.Random;
 public class MiServiceIBinder extends Service {
 	
 	private final IBinder iBinder = new MiBinderIBinder();
-	private final Random random = new Random();
-
 	public FT311UARTInterface uartInterface;
 	public SharedPreferences sharePrefSettings;
 	public handler_thread handlerThread;
@@ -28,7 +26,6 @@ public class MiServiceIBinder extends Service {
 	byte parity; /* 0: none, 1: odd, 2: even, 3: mark, 4: space */
 	byte flowControl; /* 0:none, 1: flow control(CTS,RTS) */
 
-
 	/* local variables */
 	byte[] writeBuffer;
 	byte[] readBuffer;
@@ -36,21 +33,15 @@ public class MiServiceIBinder extends Service {
 	int[] actualNumBytes;
 	byte status;
 
-	//TextView lectura;
-
+	int estado;
 
 	StringBuffer readSB = new StringBuffer();
 
 
-	public String act_string;
-	public boolean bConfiged = false;
-	
-	
 	public class MiBinderIBinder extends Binder {
 		public MiServiceIBinder getService() {
             return MiServiceIBinder.this;
         }
-
 
 
     }
@@ -61,7 +52,6 @@ public class MiServiceIBinder extends Service {
 		Toast.makeText(this, "Service iniciado", Toast.LENGTH_SHORT).show();
 
 		sharePrefSettings = getSharedPreferences("UARTLBPref", 0);
-
 
 		//lectura = (TextView)findViewById(R.id.lectu);
 		writeBuffer = new byte[64];
@@ -76,13 +66,11 @@ public class MiServiceIBinder extends Service {
 		parity = 0;
 		flowControl = 0;
 
-
-
 		uartInterface = new FT311UARTInterface(this, sharePrefSettings);
 		handlerThread = new handler_thread(handler);
 		handlerThread.start();
-
-		uartInterface.ResumeAccessory();
+		estado = uartInterface.ResumeAccessory();
+		//Toast.makeText(getApplicationContext(),"acesorio"+x,Toast.LENGTH_LONG).show();
 		baudRate = 9600;
 		stopBit = 1;
 		dataBit = 7;
@@ -91,13 +79,16 @@ public class MiServiceIBinder extends Service {
 
 		uartInterface.SetConfig(baudRate, dataBit, stopBit, parity, flowControl);
 
-
+		//estadoacesorio();
 
 
 		return iBinder;
 	}
-	
-	
+
+
+
+
+
 	@Override
     public void onDestroy(){
         Toast.makeText(this, "Service finalizado", Toast.LENGTH_SHORT).show();
@@ -106,7 +97,6 @@ public class MiServiceIBinder extends Service {
 
 	
 	public StringBuffer getResultado() {
-
 		return readSB;
 	}
 
@@ -115,13 +105,9 @@ public class MiServiceIBinder extends Service {
 		readSB.setLength(0);
 	}
 
-
-
-
 	final Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-
 			for (int i = 0; i < actualNumBytes[0]; i++) {
 				readBufferToChar[i] = (char) readBuffer[i];
 			}
@@ -137,6 +123,7 @@ public class MiServiceIBinder extends Service {
 		handler_thread(Handler h) {
 			mHandler = h;
 		}
+
 
 		public void run() {
 			Message msg;
@@ -157,19 +144,41 @@ public class MiServiceIBinder extends Service {
 
 			}
 		}
+
+
+
+
 	}
 
 
 	public void appendData(char[] data, int len) {
 		if (len >= 1)
 			readSB.append(String.copyValueOf(data, 0, len));
-		//Toast.makeText(getApplicationContext(),readSB,Toast.LENGTH_LONG).show();
-		//lectura.setText(readSB);
+	}
 
+	public int estadoacesorio() {
+		//Toast.makeText(getApplication(), ""+estado, Toast.LENGTH_SHORT).show();
+		return estado;
 	}
 
 
+	public void resumir()
+	{
+		uartInterface.DestroyAccessory(false);
+		uartInterface.ResumeAccessory();
 
-
+//		uartInterface = new FT311UARTInterface(this, sharePrefSettings);
+//		handlerThread = new handler_thread(handler);
+//		handlerThread.start();
+//		estado = uartInterface.ResumeAccessory();
+//		//Toast.makeText(getApplicationContext(),"acesorio"+x,Toast.LENGTH_LONG).show();
+//		baudRate = 9600;
+//		stopBit = 1;
+//		dataBit = 7;
+//		parity = 0;
+//		flowControl = 0;
+//
+//		uartInterface.SetConfig(baudRate, dataBit, stopBit, parity, flowControl);
+	}
 
 }

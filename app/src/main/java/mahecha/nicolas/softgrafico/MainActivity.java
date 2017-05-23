@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
     ////////////*******FAB*******//////////
 
     FloatingActionButton fab;
-    int x=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,21 +65,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ////////////*******INICIO DE SERVICIO BIND**********//////////
+
         final Intent intent = new Intent(MainActivity.this, MiServiceIBinder.class);
         tareaP = new MiTareaAsincrona();
         MainActivity.this.bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
 
-
+        ////////////////***************ICONO FLOTANTE********/////////////
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tareaP = new MiTareaAsincrona();
-                tareaP.execute();
-                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
-            }
-        });
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -96,8 +91,10 @@ public class MainActivity extends AppCompatActivity
         bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
         mapas.setArguments(bundle);
         fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal,mapas,"mapas").commit();
-        fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
+
         tareaP.execute();
+
+
 
     }
 
@@ -194,6 +191,9 @@ public class MainActivity extends AppCompatActivity
 
     private class MiTareaAsincrona extends AsyncTask<Void, Integer, Boolean> {
 
+
+
+
         @Override
         protected Boolean doInBackground(Void... params) {
 
@@ -209,6 +209,15 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onProgressUpdate(Integer... values) {
             if (mServiceIBinder != null) {
+
+                if(mServiceIBinder.estadoacesorio()==2){
+                    mServiceIBinder.resumir();
+                    fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+                }
+                if(mServiceIBinder.estadoacesorio()==0) {
+                    fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
+                }
+
                 resultado = String.valueOf(mServiceIBinder.getResultado());
                 if(resultado != null) {
                     if(!resultado.contentEquals(""))
@@ -218,13 +227,18 @@ public class MainActivity extends AppCompatActivity
 
                     }
                     mServiceIBinder.cleanr();
+
                 }
             }
         }
 
         @Override
         protected void onPreExecute() {
-
+            try {
+                if (mServiceIBinder != null) {
+                    mServiceIBinder.estadoacesorio();
+                }
+            }catch (Exception e){}
         }
 
         @Override

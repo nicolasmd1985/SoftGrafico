@@ -61,7 +61,7 @@ public class ListaDispositivos extends Fragment {
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
                 String nn = String.valueOf(arraydir.get(i).getValor());
-                Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 cargamap(nn);
 
             }

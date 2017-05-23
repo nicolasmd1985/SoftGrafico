@@ -71,7 +71,7 @@ public class ListaEventos extends Fragment {
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
                 String nn = String.valueOf(arraydir.get(i).getidop());
-                Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 cargamap(nn);
                 //refresh();
             }
@@ -81,7 +81,7 @@ public class ListaEventos extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String nn = String.valueOf(arraydir.get(i).getIdeven());
-                Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 controller.upstado(nn);
                 refresh();
                 return false;

@@ -28,7 +28,7 @@ public class FragConfiguracion extends Fragment {
 
 
     Button Autoconfig,asigsensor;
-    private MiServiceIBinder mServiceIBinder;
+
 
 
 
@@ -42,7 +42,7 @@ public class FragConfiguracion extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_frag_configuracion, container, false);
-        final DBController controller = new DBController(getActivity());
+
         Autoconfig = (Button)v.findViewById(R.id.autoconf);
         fm = getFragmentManager();
 

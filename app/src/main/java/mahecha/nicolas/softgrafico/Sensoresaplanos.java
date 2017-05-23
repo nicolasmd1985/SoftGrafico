@@ -4,6 +4,7 @@ package mahecha.nicolas.softgrafico;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
@@ -39,6 +40,7 @@ public class Sensoresaplanos extends Fragment {
     List<String> listItems;
     HashMap<String, String> queryValues;
     Fragment aux;
+    Button finaliza;
 
 
     public Sensoresaplanos() {
@@ -64,6 +66,7 @@ public class Sensoresaplanos extends Fragment {
         }
 
         listadispo = (ListView)v.findViewById(R.id.asigpla);
+        finaliza =(Button)v.findViewById(R.id.boton1);
 
         controller = new DBController(getActivity());
         arraydir = new ArrayList<Elemento>();
@@ -86,6 +89,13 @@ public class Sensoresaplanos extends Fragment {
 //                return false;
 //            }
 //        });
+        finaliza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent main = new Intent(getActivity(),MainActivity.class);
+                startActivity(main);
+            }
+        });
 
         return v;
     }

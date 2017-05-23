@@ -2,6 +2,8 @@ package mahecha.nicolas.softgrafico;
 
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +31,17 @@ import mahecha.nicolas.softgrafico.Sqlite.DBController;
  */
 public class Autoconfigura extends Fragment {
 
-    TextView Buffertext,Buffertex2;
     private MiServiceIBinder mServiceIBinder;
     String resultado;
     private MiTareaAsincrona tarea1;
     HashMap<String, String> queryValues;
     DBController controller;
     EnvioDatos envioDatos;
+    private ProgressBar pbarProgreso;
+    private ProgressDialog pDialog;
+
+    ////////////*******MANAGER**********////////////
+    FragmentManager fm;
 
     public Autoconfigura() {
         // Required empty public constructor
@@ -45,13 +52,24 @@ public class Autoconfigura extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.fragment_buffer, container, false);
-        Buffertext = (TextView)v.findViewById(R.id.bufferte);
-        Buffertex2 = (TextView)v.findViewById(R.id.buffer2);
+
         controller = new DBController(getActivity());
         envioDatos = new EnvioDatos(getActivity());
         Intent intent = new Intent(getActivity(), MiServiceIBinder.class);
         getActivity().bindService(intent, sConnectionIB, Context.BIND_AUTO_CREATE);
         tarea1 = new MiTareaAsincrona();
+
+        fm = getFragmentManager();
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pDialog.setMessage("Procesando...");
+        pDialog.setCancelable(true);
+        pDialog.setMax(100);
+        pDialog.setProgress(0);
+        pDialog.show();
+        pDialog.setProgress(10);
+
+
         tarea1.execute();
         return v;
     }
@@ -59,14 +77,17 @@ public class Autoconfigura extends Fragment {
     private void tareaLarga()
     {
         try {
-            Thread.sleep(30000);
+            Thread.sleep(10000);
         } catch(InterruptedException e) {}
     }
     ///////////////************TAREA ASINCRONA*************///////////
     private class MiTareaAsincrona extends AsyncTask<Void, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
+
+
             while(true) {
+
                 tareaLarga();
                 publishProgress();
                 if(isCancelled())
@@ -78,14 +99,27 @@ public class Autoconfigura extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             if (mServiceIBinder != null) {
+                pDialog.setProgress(30);
+
                 resultado = String.valueOf(mServiceIBinder.getResultado());
                 if(resultado != null) {
+                    pDialog.setProgress(30);
+                    pDialog.setMessage("Esperando informacion de central...");
                     if(!resultado.contentEquals(""))
                     {
+                        pDialog.setProgress(80);
+                        try {
+                            Thread.sleep(10000);
+                        } catch(InterruptedException e) {}
                         saltos();
                         envioDatos.enviar(resultado);
+
+                        tarea1.cancel(true);
+                        pDialog.setProgress(100);
+                        pDialog.hide();
                     }
-                    mServiceIBinder.cleanr();
+
+
                 }
             }
         }
@@ -96,18 +130,23 @@ public class Autoconfigura extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if(result)
-                Toast.makeText(getActivity(), "Tarea finalizada!", Toast.LENGTH_SHORT).show();
+
+
         }
 
         @Override
         protected void onCancelled() {
             Toast.makeText(getActivity(), "Tarea cancelada!", Toast.LENGTH_SHORT).show();
+
+                Sensoresaplanos asigsensor = new Sensoresaplanos();
+                fm.beginTransaction().replace(R.id.principal,asigsensor,"asigsensor").commit();
+
         }
     }
 
     //////////////////************************SALTOS***************/////////////
     public void saltos() {
+
         String[] split = resultado.split("\n");
         String sSubCadena = "";
         String sSubCadena2 = "";
@@ -165,21 +204,24 @@ public class Autoconfigura extends Fragment {
 
 
 
+//
+//        controller = new DBController(getActivity());
+//        ArrayList<HashMap<String, String>> userList2 = controller.getUsers();
+//        try {
+//        if (userList.size() != 0) {
+//                String ids = "";
+//                String nombres ="";
+//                for (HashMap<String, String> hashMap : userList2) {
+//                    ids= ids+" "+hashMap.get("id_dispositivo")+"\n";
+//                    nombres= nombres+" "+hashMap.get("nombre")+"\n";
+//                }
+//                Buffertext.setText(ids+" "+nombres);
+//            }
+//                tarea1.cancel(true);
+//            }catch (Exception e){Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG).show();}
 
-        controller = new DBController(getActivity());
-        ArrayList<HashMap<String, String>> userList2 = controller.getUsers();
-        try {
-        if (userList.size() != 0) {
-                String ids = "";
-                String nombres ="";
-                for (HashMap<String, String> hashMap : userList2) {
-                    ids= ids+" "+hashMap.get("id_dispositivo")+"\n";
-                    nombres= nombres+" "+hashMap.get("nombre")+"\n";
-                }
-                Buffertext.setText(ids+" "+nombres);
-            }
-                tarea1.cancel(true);
-            }catch (Exception e){Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG).show();}
+
+
     }
 
     //************ CONFIGURACION INTERFACE SERVICECONNECTION IBINDER******/////////////

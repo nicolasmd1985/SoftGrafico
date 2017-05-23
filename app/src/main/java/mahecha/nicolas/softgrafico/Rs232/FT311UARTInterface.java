@@ -265,7 +265,7 @@ public class FT311UARTInterface
 		}
 		else
 		{
-			SetConfig(9600,(byte)1,(byte)8,(byte)0,(byte)0);  // send default setting data for config
+			SetConfig(9600,(byte)1,(byte)7,(byte)0,(byte)0);  // send default setting data for config
 			try{
                 Thread.sleep(10);}
 			catch(Exception e){}
@@ -282,7 +282,7 @@ public class FT311UARTInterface
 		try{
             Thread.sleep(10);}
 		catch(Exception e){}
-		CloseAccessory();
+		//CloseAccessory();
 	}
 
 	/*********************helper routines*************************************************/		
@@ -352,7 +352,7 @@ public class FT311UARTInterface
 			intsharePrefSettings.edit().putString("configed", "TRUE").commit();
 			intsharePrefSettings.edit().putInt("baudRate", 9600).commit();
 			intsharePrefSettings.edit().putInt("stopBit", 1).commit();
-			intsharePrefSettings.edit().putInt("dataBit", 8).commit();
+			intsharePrefSettings.edit().putInt("dataBit", 7).commit();
 			intsharePrefSettings.edit().putInt("parity", 0).commit();			
 			intsharePrefSettings.edit().putInt("flowControl", 0).commit();
 		}
