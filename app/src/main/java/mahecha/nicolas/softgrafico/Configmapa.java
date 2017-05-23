@@ -1,6 +1,7 @@
 package mahecha.nicolas.softgrafico;
 
 
+
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,27 +13,20 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 
-import android.text.Layout;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import java.io.File;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Mapas extends Fragment {
+public class Configmapa extends Fragment {
 
     RelativeLayout relativeLayout,relative2;
     private View v;
@@ -41,26 +35,18 @@ public class Mapas extends Fragment {
     Paint paint;
 
 
-
-    public Mapas() {
+    public Configmapa() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        v = null; // now cleaning up!
-        mImage = null;
-        bMap = null;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v =  inflater.inflate(R.layout.fragment_mapas, container, false);
+        v =  inflater.inflate(R.layout.fragment_configmapa, container, false);
         relativeLayout = (RelativeLayout)v.findViewById(R.id.rect);
-        relativeLayout.addView(new ZoomView(getActivity()));
+        relativeLayout.addView(new Configmapa.ZoomView(getActivity()));
         return  v;
     }
 
@@ -97,7 +83,7 @@ public class Mapas extends Fragment {
 
         public ZoomView(Context context) {
             super(context);
-            detector = new ScaleGestureDetector(getContext(), new ScaleListener());
+            detector = new ScaleGestureDetector(getContext(), new Configmapa.ZoomView.ScaleListener());
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
 
@@ -107,7 +93,7 @@ public class Mapas extends Fragment {
 
                 bMap = BitmapFactory.decodeFile("null");
 
-             }
+            }
             mImage = new BitmapDrawable(bMap);
 
 
@@ -119,7 +105,7 @@ public class Mapas extends Fragment {
 
             // paint.setT
 
-           // paint.
+            // paint.
             //bMap2 = BitmapFactory.decodeFile("android.resource://mahecha.nicolas.softgrafico/drawable/sensorhumo");
             bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.averia);
             mImage2 = getResources().getDrawable(R.drawable.averia);
@@ -183,10 +169,10 @@ public class Mapas extends Fragment {
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-           // mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
+            // mImage.setBounds(0, 0, (int)displayWidth, (int)displayHeight);
             mImage.setBounds(0, 0, getWidth(), getHeight());
             mImage2.setBounds(50, 50, 100, 100);
-           // mImage2.
+            // mImage2.
             canvas.scale(scaleFactor, scaleFactor,getWidth()/2,getHeight()/2);
             canvas.translate(translateX / scaleFactor, translateY / scaleFactor);
             ////****PONER IMAGEN////////
@@ -194,7 +180,7 @@ public class Mapas extends Fragment {
             canvas.drawText("x:"+startX+"y:"+startY,getWidth()/2 ,getHeight()/2 , paint);
             // mImage2.draw(canvas);
             canvas.drawBitmap(reziza,startX,startY,paint);
-           // canvas.d
+            // canvas.d
             //canvas.
             //canvas.restore();
 

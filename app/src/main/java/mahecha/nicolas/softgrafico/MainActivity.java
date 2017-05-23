@@ -1,21 +1,17 @@
 package mahecha.nicolas.softgrafico;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
 import android.text.format.DateFormat;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,10 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import android.app.Fragment;
 
 import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
@@ -49,6 +43,8 @@ public class MainActivity extends AppCompatActivity
     public ListaEventos listaEventos = new ListaEventos();
     public ListaDispositivos listaDispositivos = new ListaDispositivos();
     public FragConfiguracion fragConfiguracion = new FragConfiguracion();
+    public Configdispositivos Configdispositivos = new Configdispositivos();
+    public Configmapa Configmapa = new Configmapa();
 
 
    ////////////*******MANAGER**********////////////
@@ -89,8 +85,8 @@ public class MainActivity extends AppCompatActivity
         fm = getFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
-        mapas.setArguments(bundle);
-        fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal,mapas,"mapas").commit();
+        Configmapa.setArguments(bundle);
+        fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, Configmapa,"mapas").commit();
 
         tareaP.execute();
 
@@ -132,14 +128,14 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
 
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
             fm.executePendingTransactions();
             fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
 
         } else if (id == R.id.nav_gallery) {
 
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
             fm.executePendingTransactions();
             fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaDispositivos,"listdispo").commit();
 
@@ -153,7 +149,7 @@ public class MainActivity extends AppCompatActivity
            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
             fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
             fm.executePendingTransactions();
             fm.beginTransaction().replace(R.id.principal,fragConfiguracion).commit();
 

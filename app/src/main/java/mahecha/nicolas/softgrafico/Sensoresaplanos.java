@@ -2,9 +2,9 @@ package mahecha.nicolas.softgrafico;
 
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,9 +25,9 @@ import mahecha.nicolas.softgrafico.Adaptador.Elemento;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
+
+
 public class Sensoresaplanos extends Fragment {
 
 
@@ -39,9 +38,12 @@ public class Sensoresaplanos extends Fragment {
     File[] lista;
     List<String> listItems;
     HashMap<String, String> queryValues;
-    Fragment aux;
-    Button finaliza;
 
+    Button asigsensor;
+
+    ////////////*******MANAGER**********////////////
+    FragmentManager fm;
+    Fragment aux;
 
     public Sensoresaplanos() {
         // Required empty public constructor
@@ -66,7 +68,7 @@ public class Sensoresaplanos extends Fragment {
         }
 
         listadispo = (ListView)v.findViewById(R.id.asigpla);
-        finaliza =(Button)v.findViewById(R.id.boton1);
+        asigsensor =(Button)v.findViewById(R.id.boton1);
 
         controller = new DBController(getActivity());
         arraydir = new ArrayList<Elemento>();
@@ -89,11 +91,24 @@ public class Sensoresaplanos extends Fragment {
 //                return false;
 //            }
 //        });
-        finaliza.setOnClickListener(new View.OnClickListener() {
+       // fm = getFragmentManager();
+        asigsensor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent main = new Intent(getActivity(),MainActivity.class);
-                startActivity(main);
+
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                aux = getFragmentManager().findFragmentByTag("asigsensor");
+                fm.beginTransaction().remove(aux).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano","");
+                aux = new Configmapa();
+                Configdispositivos configdispositivos = new Configdispositivos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.principal,aux,"mapas").replace(R.id.lista,configdispositivos).commit();
+                fm.executePendingTransactions();
+
             }
         });
 

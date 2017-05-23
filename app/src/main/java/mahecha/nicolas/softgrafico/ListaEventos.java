@@ -3,20 +3,14 @@ package mahecha.nicolas.softgrafico;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -149,7 +143,7 @@ public class ListaEventos extends Fragment {
         fm.beginTransaction().remove(aux).commit();
         Bundle bundle = new Bundle();
         bundle.putString("plano",nn);
-        aux = new Mapas();
+        aux = new Configmapa();
         aux.setArguments(bundle);
         fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.principal,aux,"mapas").commit();
