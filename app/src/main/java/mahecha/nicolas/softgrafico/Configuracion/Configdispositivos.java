@@ -1,4 +1,4 @@
-package mahecha.nicolas.softgrafico;
+package mahecha.nicolas.softgrafico.Configuracion;
 
 
 import android.app.Fragment;
@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import mahecha.nicolas.softgrafico.Adaptador.Adaptador;
 import mahecha.nicolas.softgrafico.Adaptador.Elemento;
+import mahecha.nicolas.softgrafico.R;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
 /**
@@ -57,9 +58,10 @@ public class Configdispositivos extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
-                String nn = String.valueOf(arraydir.get(i).getValor());
+                String plano = String.valueOf(arraydir.get(i).getValor());
+                String iddisp = String.valueOf(arraydir.get(i).getTitulo());
                 // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                cargamap(nn);
+                cargamap(plano,iddisp);
 
             }
         });
@@ -109,7 +111,7 @@ public class Configdispositivos extends Fragment {
     }
 
 
-    public void cargamap(String nn)
+    public void cargamap(String plano, String iddisp)
     {
 
 
@@ -118,7 +120,8 @@ public class Configdispositivos extends Fragment {
         aux = getFragmentManager().findFragmentByTag("mapas");
         fm.beginTransaction().remove(aux).commit();
         Bundle bundle = new Bundle();
-        bundle.putString("plano",nn);
+        bundle.putString("plano",plano);
+        bundle.putString("iddisp",iddisp);
         aux = new Configmapa();
         aux.setArguments(bundle);
         fm = getFragmentManager();

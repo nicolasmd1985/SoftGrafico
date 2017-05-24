@@ -1,4 +1,4 @@
-package mahecha.nicolas.softgrafico;
+package mahecha.nicolas.softgrafico.Configuracion;
 
 
 import android.app.Fragment;
@@ -16,12 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import mahecha.nicolas.softgrafico.EnvioDatos;
+import mahecha.nicolas.softgrafico.R;
 import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
@@ -103,7 +104,7 @@ public class Autoconfigura extends Fragment {
 
                 resultado = String.valueOf(mServiceIBinder.getResultado());
                 if(resultado != null) {
-                    pDialog.setProgress(30);
+                    pDialog.setProgress(60);
                     pDialog.setMessage("Esperando informacion de central...");
                     if(!resultado.contentEquals(""))
                     {

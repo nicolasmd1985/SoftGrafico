@@ -1,9 +1,8 @@
-package mahecha.nicolas.softgrafico;
+package mahecha.nicolas.softgrafico.Configuracion;
 
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -11,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
-import mahecha.nicolas.softgrafico.Sqlite.DBController;
+import mahecha.nicolas.softgrafico.R;
 
 
 /**

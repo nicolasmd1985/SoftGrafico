@@ -1,4 +1,4 @@
-package mahecha.nicolas.softgrafico;
+package mahecha.nicolas.softgrafico.Configuracion;
 
 
 import android.app.AlertDialog;
@@ -22,6 +22,9 @@ import java.util.List;
 
 import mahecha.nicolas.softgrafico.Adaptador.Adaptador;
 import mahecha.nicolas.softgrafico.Adaptador.Elemento;
+import mahecha.nicolas.softgrafico.Configuracion.Configdispositivos;
+import mahecha.nicolas.softgrafico.Configuracion.Configmapa;
+import mahecha.nicolas.softgrafico.R;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
 

@@ -60,9 +60,12 @@ public class ListaDispositivos extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
-                String nn = String.valueOf(arraydir.get(i).getValor());
-               // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                cargamap(nn);
+                String plano = String.valueOf(arraydir.get(i).getValor());
+                String posx = String.valueOf(arraydir.get(i).getidop());
+                String posy = String.valueOf(arraydir.get(i).getIdeven());
+
+               //Toast.makeText(getActivity(),plano+" "+posx+" "+posy,Toast.LENGTH_LONG).show();
+                cargamap(plano,posx,posy);
 
             }
         });
@@ -86,23 +89,23 @@ public class ListaDispositivos extends Fragment {
 
             for (HashMap<String, String> hashMap : userList) {
                if(hashMap.get("nombre").contains("HUMO")) {
-                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1","2");
+                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"));
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("SUPRV")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"));
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR") && hashMap.get("nombre").contains("PULSADOR")) {
-                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"));
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("BATERIA")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"));
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR")) {
-                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"));
                     arraydir.add(item);
                 }
          }
@@ -112,7 +115,7 @@ public class ListaDispositivos extends Fragment {
    }
 
 
-   public void cargamap(String nn)
+   public void cargamap(String plano,String posx, String posy)
    {
 
 
@@ -121,7 +124,9 @@ public class ListaDispositivos extends Fragment {
        aux = getFragmentManager().findFragmentByTag("mapas");
        fm.beginTransaction().remove(aux).commit();
        Bundle bundle = new Bundle();
-       bundle.putString("plano",nn);
+       bundle.putString("plano",plano);
+       bundle.putString("posx",posx);
+       bundle.putString("posy",posy);
        aux = new Mapas();
        aux.setArguments(bundle);
        fm = getFragmentManager();

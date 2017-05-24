@@ -25,7 +25,9 @@ import android.widget.Toast;
 import java.util.Date;
 import java.util.HashMap;
 
-import mahecha.nicolas.softgrafico.Rs232.FT311UARTInterface;
+import mahecha.nicolas.softgrafico.Configuracion.Configdispositivos;
+import mahecha.nicolas.softgrafico.Configuracion.Configmapa;
+import mahecha.nicolas.softgrafico.Configuracion.FragConfiguracion;
 import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
@@ -44,8 +46,8 @@ public class MainActivity extends AppCompatActivity
     public ListaEventos listaEventos = new ListaEventos();
     public ListaDispositivos listaDispositivos = new ListaDispositivos();
     public FragConfiguracion fragConfiguracion = new FragConfiguracion();
-    public Configdispositivos Configdispositivos = new Configdispositivos();
-    public Configmapa Configmapa = new Configmapa();
+    public mahecha.nicolas.softgrafico.Configuracion.Configdispositivos Configdispositivos = new Configdispositivos();
+    public mahecha.nicolas.softgrafico.Configuracion.Configmapa Configmapa = new Configmapa();
 
 
    ////////////*******MANAGER**********////////////
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity
         fm = getFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
+        bundle.putString("posx","80");
+        bundle.putString("posy","80");
         mapas.setArguments(bundle);
         fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
 
@@ -224,7 +228,7 @@ public class MainActivity extends AppCompatActivity
                 if(mServiceIBinder.estadoacesorio()==0) {
                     fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
                 }else{
-                    mServiceIBinder.onDestroy();
+                    //mServiceIBinder.onDestroy();
                 }
 
                 resultado = String.valueOf(mServiceIBinder.getResultado());

@@ -1,4 +1,4 @@
-package mahecha.nicolas.softgrafico;
+package mahecha.nicolas.softgrafico.Configuracion;
 
 
 
@@ -20,7 +20,14 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import java.util.HashMap;
+
+import mahecha.nicolas.softgrafico.R;
+import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
 
 /**
@@ -33,7 +40,10 @@ public class Configmapa extends Fragment {
     Bitmap bMap,bMap2,reziza;
     Drawable mImage,mImage2;
     Paint paint;
-
+    Button guardar;
+    float puntox=0,puntoy=0;
+    DBController controller;
+    HashMap<String, String> queryValues;
 
     public Configmapa() {
         // Required empty public constructor
@@ -47,6 +57,25 @@ public class Configmapa extends Fragment {
         v =  inflater.inflate(R.layout.fragment_configmapa, container, false);
         relativeLayout = (RelativeLayout)v.findViewById(R.id.rect);
         relativeLayout.addView(new Configmapa.ZoomView(getActivity()));
+        guardar = (Button)v.findViewById(R.id.guardar);
+        guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(),getArguments().getString("iddisp"),Toast.LENGTH_LONG).show();
+                queryValues = new HashMap<String, String>();
+                controller = new DBController(getActivity());
+                queryValues.put("id_dispositivo", getArguments().getString("iddisp"));
+                queryValues.put("puntox", ""+puntox);
+                queryValues.put("puntoy", ""+puntoy);
+
+                try {
+                    controller.uppuntos(queryValues);
+                }catch (Exception e) {
+                    // Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
         return  v;
     }
 
@@ -123,7 +152,9 @@ public class Configmapa extends Fragment {
                     mode = DRAG;
 
                     startX = event.getX() - previousTranslateX;
+                    puntox=startX;
                     startY = event.getY() - previousTranslateY;
+                    puntoy=startY;
                     break;
 
                 case MotionEvent.ACTION_MOVE:
