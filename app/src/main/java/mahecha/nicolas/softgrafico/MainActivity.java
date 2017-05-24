@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity
         fm = getFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
-        Configmapa.setArguments(bundle);
-        fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, Configmapa,"mapas").commit();
+        mapas.setArguments(bundle);
+        fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
 
         tareaP.execute();
 
@@ -206,6 +206,8 @@ public class MainActivity extends AppCompatActivity
         protected void onProgressUpdate(Integer... values) {
             if (mServiceIBinder != null) {
 
+                String xx = String.valueOf(mServiceIBinder.estadoacesorio());
+                Toast.makeText(MainActivity.this,xx,Toast.LENGTH_LONG).show();
                 if(mServiceIBinder.estadoacesorio()==2){
                     mServiceIBinder.resumir();
                     fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
@@ -218,6 +220,7 @@ public class MainActivity extends AppCompatActivity
                 if(resultado != null) {
                     if(!resultado.contentEquals(""))
                     {
+                        Toast.makeText(MainActivity.this,resultado,Toast.LENGTH_LONG).show();
                         saltos();
                         envioDatos.enviar(resultado);
 

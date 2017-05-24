@@ -143,7 +143,7 @@ public class ListaEventos extends Fragment {
         fm.beginTransaction().remove(aux).commit();
         Bundle bundle = new Bundle();
         bundle.putString("plano",nn);
-        aux = new Configmapa();
+        aux = new Mapas();
         aux.setArguments(bundle);
         fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.principal,aux,"mapas").commit();
