@@ -108,9 +108,7 @@ public class Autoconfigura extends Fragment {
                     if(!resultado.contentEquals(""))
                     {
                         pDialog.setProgress(80);
-                        try {
-                            Thread.sleep(10000);
-                        } catch(InterruptedException e) {}
+
                         saltos();
                         envioDatos.enviar(resultado);
 

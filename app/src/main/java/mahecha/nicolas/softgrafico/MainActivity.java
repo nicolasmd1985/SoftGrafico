@@ -25,6 +25,7 @@ import android.widget.Toast;
 import java.util.Date;
 import java.util.HashMap;
 
+import mahecha.nicolas.softgrafico.Rs232.FT311UARTInterface;
 import mahecha.nicolas.softgrafico.Rs232.MiServiceIBinder;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
@@ -51,8 +52,11 @@ public class MainActivity extends AppCompatActivity
     FragmentManager fm;
 
     ////////////*******FAB*******//////////
-
     FloatingActionButton fab;
+
+
+
+
 
 
     @Override
@@ -155,13 +159,21 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_share) {
-            try {
+            try            {
                 fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
                 tareaP.cancel(true);
                 //mServiceIBinder.onDestroy();
             }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
         } else if (id == R.id.nav_send) {
+
+            try            {
+                tareaP = new MiTareaAsincrona();
+                //fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+                tareaP.execute();
+                //mServiceIBinder.onDestroy();
+            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -204,23 +216,22 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onProgressUpdate(Integer... values) {
+            //int p = 0;
             if (mServiceIBinder != null) {
 
-                String xx = String.valueOf(mServiceIBinder.estadoacesorio());
-                Toast.makeText(MainActivity.this,xx,Toast.LENGTH_LONG).show();
-                if(mServiceIBinder.estadoacesorio()==2){
-                    mServiceIBinder.resumir();
-                    fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
-                }
+
+
                 if(mServiceIBinder.estadoacesorio()==0) {
                     fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.verde));
+                }else{
+                    mServiceIBinder.onDestroy();
                 }
 
                 resultado = String.valueOf(mServiceIBinder.getResultado());
                 if(resultado != null) {
                     if(!resultado.contentEquals(""))
                     {
-                        Toast.makeText(MainActivity.this,resultado,Toast.LENGTH_LONG).show();
+                       // Toast.makeText(MainActivity.this,resultado,Toast.LENGTH_LONG).show();
                         saltos();
                         envioDatos.enviar(resultado);
 
@@ -235,7 +246,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPreExecute() {
             try {
                 if (mServiceIBinder != null) {
-                    mServiceIBinder.estadoacesorio();
+                   // mServiceIBinder.estadoacesorio();
                 }
             }catch (Exception e){}
         }
@@ -357,6 +368,10 @@ public class MainActivity extends AppCompatActivity
         String time = s.toString();
         return time ;
     }
+
+
+
+
 
 
 }

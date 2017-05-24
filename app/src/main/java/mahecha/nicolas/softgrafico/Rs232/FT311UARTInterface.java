@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import mahecha.nicolas.softgrafico.MainActivity;
+
 
 /******************************FT311 GPIO interface class******************************************/
 public class FT311UARTInterface
@@ -282,7 +284,7 @@ public class FT311UARTInterface
 		try{
             Thread.sleep(10);}
 		catch(Exception e){}
-		//CloseAccessory();
+		CloseAccessory();
 	}
 
 	/*********************helper routines*************************************************/		
@@ -334,7 +336,10 @@ public class FT311UARTInterface
 		inputstream = null;
 		outputstream = null;
 
+
 		System.exit(0);
+		//System.
+
 	}
 
 	protected void saveDetachPreference() {
@@ -388,7 +393,7 @@ public class FT311UARTInterface
 			{
 				saveDetachPreference();
 				DestroyAccessory(true);
-				//CloseAccessory();
+				CloseAccessory();
 			}else
 			{
 				Log.d("LED", "....");

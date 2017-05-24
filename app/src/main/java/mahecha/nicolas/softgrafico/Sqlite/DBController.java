@@ -190,7 +190,7 @@ public class DBController extends SQLiteOpenHelper {
     public void upstado(String id_event) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        Toast.makeText(contexto,"entra",Toast.LENGTH_LONG).show();
+        //Toast.makeText(contexto,"entra",Toast.LENGTH_LONG).show();
         values.put("activado","0");
 
         database.update("eventos", values ,"id_evento ='"+id_event+"'", null);

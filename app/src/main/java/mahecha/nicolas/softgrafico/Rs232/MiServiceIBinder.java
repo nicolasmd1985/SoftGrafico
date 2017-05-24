@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import mahecha.nicolas.softgrafico.MainActivity;
+
 public class MiServiceIBinder extends Service {
 	
 	private final IBinder iBinder = new MiBinderIBinder();
@@ -45,7 +47,9 @@ public class MiServiceIBinder extends Service {
 
 
     }
-	
+
+
+
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -92,6 +96,7 @@ public class MiServiceIBinder extends Service {
 	@Override
     public void onDestroy(){
         Toast.makeText(this, "Service finalizado", Toast.LENGTH_SHORT).show();
+		uartInterface.DestroyAccessory(true);
 
     }
 
@@ -162,23 +167,6 @@ public class MiServiceIBinder extends Service {
 	}
 
 
-	public void resumir()
-	{
-		uartInterface.DestroyAccessory(false);
-		uartInterface.ResumeAccessory();
 
-//		uartInterface = new FT311UARTInterface(this, sharePrefSettings);
-//		handlerThread = new handler_thread(handler);
-//		handlerThread.start();
-//		estado = uartInterface.ResumeAccessory();
-//		//Toast.makeText(getApplicationContext(),"acesorio"+x,Toast.LENGTH_LONG).show();
-//		baudRate = 9600;
-//		stopBit = 1;
-//		dataBit = 7;
-//		parity = 0;
-//		flowControl = 0;
-//
-//		uartInterface.SetConfig(baudRate, dataBit, stopBit, parity, flowControl);
-	}
 
 }
