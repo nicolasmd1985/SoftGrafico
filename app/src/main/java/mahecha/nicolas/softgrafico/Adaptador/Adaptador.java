@@ -66,20 +66,20 @@ public class Adaptador extends BaseAdapter {
         Picasso.with(context).load(dir.getImagen()).into(foto);
 
         //foto.setImageResource(dir.getImagen());
+        TextView id_dispostivo = (TextView) v.findViewById(R.id.id_dispositivo);
+        id_dispostivo.setText(dir.getId_dispositivo());
+
+        //foto.setImageResource(dir.getImagen());
         TextView nombre = (TextView) v.findViewById(R.id.descripcion);
-        nombre.setText(dir.getTexto());
+        nombre.setText(dir.getNombre());
 
         //foto.setImageResource(dir.getImagen());
-        TextView evento = (TextView) v.findViewById(R.id.evento);
-        evento.setText(dir.getTitulo());
+        TextView fecha = (TextView) v.findViewById(R.id.fecha);
+        fecha.setText(dir.getFecha());
 
         //foto.setImageResource(dir.getImagen());
-        TextView valor = (TextView) v.findViewById(R.id.valor);
-        valor.setText(dir.getValor());
-
-//foto.setImageResource(dir.getImagen());
-        TextView idgd = (TextView) v.findViewById(R.id.idgd);
-        idgd.setText(dir.getidop());
+        TextView plano = (TextView) v.findViewById(R.id.plano);
+        plano.setText(dir.getPlano());
 
         // DEVOLVEMOS VISTA
         return v;

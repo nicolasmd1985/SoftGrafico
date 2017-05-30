@@ -3,32 +3,30 @@ package mahecha.nicolas.softgrafico.Adaptador;
 public class Elemento {
 
     public String imagen;
-    public String texto;
-    public String titulo;
-    public String valor;
-    public String idop;
-    public String ideven;
+    public String nombre;
+    public String id_dispositivo;
+    public String fecha;
+    public String plano;
+    public String posx;
+    public String posy;
+    public String id_evento;
     public long id;
 
-    //CONSTRUCTOR2
-    public Elemento(String img, String text, String titu, String valor, String idop,String ideven) {
+    //CONSTRUCTOR
+    public Elemento(String imagen, String nombre, String id_dispositivo, String fecha, String plano,String posx,String posy,String id_evento) {
         super();
-        this.texto =text;
-        this.imagen=img;
-        this.titulo=titu;
-        this.valor=valor;
-        this.idop=idop;
-        this.ideven=ideven;
+        this.imagen=imagen;
+        this.nombre =nombre;
+        this.id_dispositivo=id_dispositivo;
+        this.fecha=fecha;
+        this.plano=plano;
+        this.posx=posx;
+        this.posy=posy;
+        this.id_evento=id_evento;
 
     }
 
-    //CONSTRUCTOR 1
-    public Elemento(String img, String text, long id) {
-        super();
-        this.texto =text;
-        this.imagen=img;
-        this.id = id;
-    }
+
 
 
 
@@ -36,46 +34,33 @@ public class Elemento {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getTexto() {
-        return texto;
+    public String getId_dispositivo() {
+        return id_dispositivo;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public String getFecha() {
+        return fecha;
     }
 
-    public long getId() {
-        return id;
+    public String getPlano() {return plano;}
+
+    public String getPosx() {
+        return posx;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public String getPosy() {
+        return posy;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getId_evento() {
+        return id_evento;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getValor() {
-        return valor;
-    }
-
-
-    public String getidop() {
-        return idop;
-    }
-
-    public String getIdeven() {
-        return ideven;
-    }
+    public long getId() {return id;}
 
 
 

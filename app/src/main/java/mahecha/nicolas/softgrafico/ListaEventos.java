@@ -54,6 +54,7 @@ public class ListaEventos extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         v = inflater.inflate(R.layout.fragment_lista_eventos, container, false);
         lista = (ListView) v.findViewById(R.id.eventos);
         arraydir = new ArrayList<Elemento>();
@@ -64,17 +65,19 @@ public class ListaEventos extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
-                String nn = String.valueOf(arraydir.get(i).getidop());
-               // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                cargamap(nn);
-                //refresh();
+                String plano = String.valueOf(arraydir.get(i).getPlano());
+                String posx = String.valueOf(arraydir.get(i).getPosx());
+                String posy = String.valueOf(arraydir.get(i).getPosy());
+
+                //Toast.makeText(getActivity(),plano+" "+posx+" "+posy,Toast.LENGTH_LONG).show();
+                cargamap(plano,posx,posy);
             }
         });
 
         lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String nn = String.valueOf(arraydir.get(i).getIdeven());
+                String nn = String.valueOf(arraydir.get(i).getId_evento());
                // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 controller.upstado(nn);
                 refresh();
@@ -102,19 +105,19 @@ public class ListaEventos extends Fragment {
 
 
                 if(hashMap.get("tipo").contains("1") ) {
-                    item = new Elemento(alarma, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
+                    item = new Elemento(alarma, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"),hashMap.get("plano"),  hashMap.get("posx"),hashMap.get("posy"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
                 if(hashMap.get("tipo").contains("2")) {
-                    item = new Elemento(averia, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
+                    item = new Elemento(averia, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),  hashMap.get("posx"),hashMap.get("posy"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
                 if(hashMap.get("tipo").contains("3")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),  hashMap.get("posx"),hashMap.get("posy"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
                 if(hashMap.get("tipo").contains("4")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),hashMap.get("id_evento"));
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("fecha"), hashMap.get("plano"),  hashMap.get("posx"),hashMap.get("posy"),hashMap.get("id_evento"));
                     arraydir.add(item);
                 }
             }
@@ -135,19 +138,22 @@ public class ListaEventos extends Fragment {
     }
 
 
-    public void cargamap(String nn)
+    public void cargamap(String plano,String posx, String posy)
     {
         fm = getFragmentManager();
         fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
         aux = getFragmentManager().findFragmentByTag("mapas");
         fm.beginTransaction().remove(aux).commit();
         Bundle bundle = new Bundle();
-        bundle.putString("plano",nn);
+        bundle.putString("plano",plano);
+        bundle.putString("posx",posx);
+        bundle.putString("posy",posy);
         aux = new Mapas();
         aux.setArguments(bundle);
         fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.principal,aux,"mapas").commit();
         fm.executePendingTransactions();
+
     }
 
 }

@@ -58,8 +58,8 @@ public class Configdispositivos extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
 
-                String plano = String.valueOf(arraydir.get(i).getValor());
-                String iddisp = String.valueOf(arraydir.get(i).getTitulo());
+                String plano = String.valueOf(arraydir.get(i).getPlano());
+                String iddisp = String.valueOf(arraydir.get(i).getId_dispositivo());
                 // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
                 cargamap(plano,iddisp);
 
@@ -85,23 +85,23 @@ public class Configdispositivos extends Fragment {
 
             for (HashMap<String, String> hashMap : userList) {
                 if(hashMap.get("nombre").contains("HUMO")) {
-                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"), hashMap.get("plano"), "1","2");
+                    item = new Elemento(sensorhumo, hashMap.get("nombre"), hashMap.get("id_dispositivo"),"",hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"),"");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("SUPRV")) {
-                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(pulsador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "",hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"),"");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR") && hashMap.get("nombre").contains("PULSADOR")) {
-                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(avisador, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "",hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"),"");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("BATERIA")) {
-                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(bateria, hashMap.get("nombre"), hashMap.get("id_dispositivo"), "",hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"),"");
                     arraydir.add(item);
                 }
                 else if(hashMap.get("nombre").contains("MONITOR")) {
-                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"),  hashMap.get("plano"), "1","2");
+                    item = new Elemento(monitor , hashMap.get("nombre"), hashMap.get("id_dispositivo"), "",hashMap.get("plano"), hashMap.get("posx"),hashMap.get("posy"),"");
                     arraydir.add(item);
                 }
             }
