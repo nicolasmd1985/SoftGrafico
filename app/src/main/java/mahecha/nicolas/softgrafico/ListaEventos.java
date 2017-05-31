@@ -70,9 +70,10 @@ public class ListaEventos extends Fragment {
                 String plano = String.valueOf(arraydir.get(i).getPlano());
                 String posx = String.valueOf(arraydir.get(i).getPosx());
                 String posy = String.valueOf(arraydir.get(i).getPosy());
+                String imagen = String.valueOf(arraydir.get(i).getNombre());
 
                 //Toast.makeText(getActivity(),plano+" "+posx+" "+posy,Toast.LENGTH_LONG).show();
-                cargamap(plano,posx,posy);
+                cargamap(plano,posx,posy,imagen);
             }
         });
 
@@ -162,7 +163,7 @@ public class ListaEventos extends Fragment {
     }
 
 
-    public void cargamap(String plano,String posx, String posy)
+    public void cargamap(String plano,String posx, String posy,String imagen)
     {
         fm = getFragmentManager();
         fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -172,6 +173,7 @@ public class ListaEventos extends Fragment {
         bundle.putString("plano",plano);
         bundle.putString("posx",posx);
         bundle.putString("posy",posy);
+        bundle.putString("imagen",imagen);
         aux = new Mapas();
         aux.setArguments(bundle);
         fm = getFragmentManager();

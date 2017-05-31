@@ -65,27 +65,14 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        //getWindow().setFlags(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN, WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//        getWindow().setFlags(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN, WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-//       // getWindow().setFlags(WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON, WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
-//
-
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         enableFullScreen(true);
-
 
 
         ////////////*******INICIO DE SERVICIO BIND**********//////////
@@ -114,12 +101,12 @@ public class MainActivity extends AppCompatActivity
         if (userList.size() != 0) {
 
             HashMap<String, String> hashMap = userList.get(0);
-            //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
             fm = getFragmentManager();
             Bundle bundle = new Bundle();
             bundle.putString("plano",hashMap.get("plano"));
             bundle.putString("posx",hashMap.get("posx"));
             bundle.putString("posy",hashMap.get("posy"));
+            bundle.putString("imagen",hashMap.get("nombre"));
             mapas.setArguments(bundle);
             fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
         }else{
@@ -128,6 +115,7 @@ public class MainActivity extends AppCompatActivity
             bundle.putString("plano","");
             bundle.putString("posx","0");
             bundle.putString("posy","0");
+            bundle.putString("imagen","");
             mapas.setArguments(bundle);
             fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
         }
@@ -192,6 +180,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
                 bundle.putString("posy",hashMap.get("posy"));
+                bundle.putString("imagen",hashMap.get("nombre"));
                 aux = new Mapas();
                 listaEventos = new ListaEventos();
                 aux.setArguments(bundle);
@@ -207,6 +196,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano","");
                 bundle.putString("posx","0");
                 bundle.putString("posy","0");
+                bundle.putString("imagen","");
                 aux = new Mapas();
                 listaEventos = new ListaEventos();
                 aux.setArguments(bundle);
@@ -233,6 +223,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
                 bundle.putString("posy",hashMap.get("posy"));
+                bundle.putString("imagen",hashMap.get("nombre"));
                 aux = new Mapas();
                 listaDispositivos = new ListaDispositivos();
                 aux.setArguments(bundle);
@@ -248,6 +239,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano","");
                 bundle.putString("posx","0");
                 bundle.putString("posy","0");
+                bundle.putString("imagen","");
                 aux = new Mapas();
                 listaDispositivos = new ListaDispositivos();
                 aux.setArguments(bundle);
@@ -272,6 +264,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
                 bundle.putString("posy",hashMap.get("posy"));
+                bundle.putString("imagen",hashMap.get("nombre"));
                 aux = new Mapas();
                 historial = new Historial();
                 aux.setArguments(bundle);
@@ -287,6 +280,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano","");
                 bundle.putString("posx","0");
                 bundle.putString("posy","0");
+                bundle.putString("imagen","");
                 aux = new Mapas();
                 historial = new Historial();
                 aux.setArguments(bundle);
@@ -436,11 +430,6 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("tipo","1");
                 controller.inserevento(queryValues);
 
-//                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
-//                fm.executePendingTransactions();
-//                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
-
 
                   ArrayList<HashMap<String, String>> userList = controller.geteventos();
                // if (userList.size() != 0) {
@@ -454,6 +443,7 @@ public class MainActivity extends AppCompatActivity
                     bundle.putString("plano",hashMap.get("plano"));
                     bundle.putString("posx",hashMap.get("posx"));
                     bundle.putString("posy",hashMap.get("posy"));
+                    bundle.putString("imagen",hashMap.get("nombre"));
                     aux = new Mapas();
                     listaEventos = new ListaEventos();
                     aux.setArguments(bundle);
@@ -488,6 +478,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
                 bundle.putString("posy",hashMap.get("posy"));
+                bundle.putString("imagen",hashMap.get("nombre"));
                 aux = new Mapas();
                 listaEventos = new ListaEventos();
                 aux.setArguments(bundle);
@@ -520,6 +511,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
                 bundle.putString("posy",hashMap.get("posy"));
+                bundle.putString("imagen",hashMap.get("nombre"));
                 aux = new Mapas();
                 listaEventos = new ListaEventos();
                 aux.setArguments(bundle);
@@ -552,6 +544,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
                 bundle.putString("posy",hashMap.get("posy"));
+                bundle.putString("imagen",hashMap.get("nombre"));
                 aux = new Mapas();
                 listaEventos = new ListaEventos();
                 aux.setArguments(bundle);

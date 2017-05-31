@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import mahecha.nicolas.softgrafico.Adaptador.Elemento;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,6 +97,7 @@ public class Mapas extends Fragment {
 
         public ZoomView(Context context) {
             super(context);
+
             detector = new ScaleGestureDetector(getContext(), new ScaleListener());
 
             if(getArguments().getString("plano") != null) {
@@ -103,7 +106,25 @@ public class Mapas extends Fragment {
 
                 bMap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/piso3.jpg");
              }
-            bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.averia);
+
+
+            if(getArguments().getString("imagen").contains("HUMO")) {
+                bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.sensorhumo);
+            }
+            else if(getArguments().getString("imagen").contains("SUPRV")) {
+                bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.pulsador);
+            }
+            else if(getArguments().getString("imagen").contains("MONITOR") && getArguments().getString("imagen").contains("PULSADOR")) {
+                bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.avisador);
+            }
+            else if(getArguments().getString("imagen").contains("BATERIA")) {
+                bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.bateria);
+            }
+            else if(getArguments().getString("imagen").contains("MONITOR")) {
+                bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.monitor);
+            }else{bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.averia);}
+
+           // bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.averia);
             mImage = new BitmapDrawable(bMap);
            // mImage2 = getResources().getDrawable(R.drawable.averia);
             reziza = getResizedBitmap(bMap2,30,30);
