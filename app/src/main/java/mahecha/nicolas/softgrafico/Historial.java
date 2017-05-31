@@ -1,8 +1,10 @@
 package mahecha.nicolas.softgrafico;
 
-
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -17,14 +19,10 @@ import java.util.HashMap;
 import mahecha.nicolas.softgrafico.Adaptador.Adaptador;
 import mahecha.nicolas.softgrafico.Adaptador.Elemento;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
-import android.app.Fragment;
-import android.widget.Toast;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ListaEventos extends Fragment {
+public class Historial extends Fragment {
+
 
     ListView lista;
     ArrayList<Elemento> arraydir;
@@ -38,8 +36,8 @@ public class ListaEventos extends Fragment {
 
     View v;
 
-    public ListaEventos() {
-        // Required empty public constructor
+    public Historial() {
+
     }
 
 
@@ -49,15 +47,16 @@ public class ListaEventos extends Fragment {
         v = null; // now cleaning up!
         arraydir = null;
         lista = null;
-       // bMap = null;
+        // bMap = null;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
-        v = inflater.inflate(R.layout.fragment_lista_eventos, container, false);
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        v =  inflater.inflate(R.layout.fragment_historial, container, false);
         lista = (ListView) v.findViewById(R.id.eventos);
         arraydir = new ArrayList<Elemento>();
         controller = new DBController(getActivity());
@@ -66,7 +65,7 @@ public class ListaEventos extends Fragment {
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int i, long l) {
-               // Toast.makeText(getActivity(),""+i ,Toast.LENGTH_LONG).show();
+                // Toast.makeText(getActivity(),""+i ,Toast.LENGTH_LONG).show();
                 String plano = String.valueOf(arraydir.get(i).getPlano());
                 String posx = String.valueOf(arraydir.get(i).getPosx());
                 String posy = String.valueOf(arraydir.get(i).getPosy());
@@ -76,16 +75,16 @@ public class ListaEventos extends Fragment {
             }
         });
 
-        lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String nn = String.valueOf(arraydir.get(i).getId_evento());
-               // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
-                controller.upstado(nn);
-                refresh();
-                return false;
-            }
-        });
+//        lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                String nn = String.valueOf(arraydir.get(i).getId_evento());
+//                // Toast.makeText(getActivity(),nn,Toast.LENGTH_LONG).show();
+//                controller.upstado(nn);
+//                refresh();
+//                return false;
+//            }
+//        });
 
 
 
@@ -109,13 +108,13 @@ public class ListaEventos extends Fragment {
         Adaptador adaptador = new Adaptador(getActivity(), getActivity(), arraydir);
 
 
-        ArrayList<HashMap<String, String>> userList = controller.geteventos();
+        ArrayList<HashMap<String, String>> userList = controller.getehistorial();
 
         if (userList.size() != 0) {
 
             for (HashMap<String, String> hashMap : userList) {
                 posic++;
-               // Toast.makeText(getContext(),hashMap.get("tipo"),Toast.LENGTH_LONG).show();
+                // Toast.makeText(getContext(),hashMap.get("tipo"),Toast.LENGTH_LONG).show();
                 alarma="android.resource://mahecha.nicolas.softgrafico/drawable/averia";
                 averia="android.resource://mahecha.nicolas.softgrafico/drawable/alarma";
                 bateria="android.resource://mahecha.nicolas.softgrafico/drawable/pulsador";
@@ -139,15 +138,8 @@ public class ListaEventos extends Fragment {
                     arraydir.add(item);
                 }
             }
-
-
-
-            lista.setAdapter(adaptador);
-
-
-
-
-        }
+          lista.setAdapter(adaptador);
+       }
     }
 
 

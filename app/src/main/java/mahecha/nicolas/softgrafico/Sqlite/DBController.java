@@ -163,7 +163,7 @@ public class DBController extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT eventos.id_evento,eventos.id_dispositivo,eventos.fecha,eventos.tipo,dispositivo.nombre,dispositivo.plano,dispositivo.posx,dispositivo.posy FROM eventos INNER JOIN dispositivo ON eventos.id_dispositivo = dispositivo.id_dispositivo WHERE activado = 1 ";
+        String selectQuery = "SELECT eventos.id_evento,eventos.id_dispositivo,eventos.fecha,eventos.tipo,dispositivo.nombre,dispositivo.plano,dispositivo.posx,dispositivo.posy FROM eventos INNER JOIN dispositivo ON eventos.id_dispositivo = dispositivo.id_dispositivo WHERE activado = 1 ORDER BY fecha DESC";
 
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -233,5 +233,43 @@ public class DBController extends SQLiteOpenHelper {
         database.update("dispositivo", values ,"id_dispositivo"+"="+id, null);
         database.close();
     }
+
+
+    ////////////////////*************OBTENER LISTA DE USUARIOS***********///////////ok
+
+    /**
+     * Get list of Users from SQLite DB as Array List
+     * @return
+     */
+    public ArrayList<HashMap<String, String>> getehistorial() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+
+        String selectQuery = "SELECT eventos.id_evento,eventos.id_dispositivo,eventos.fecha,eventos.tipo,dispositivo.nombre,dispositivo.plano,dispositivo.posx,dispositivo.posy FROM eventos INNER JOIN dispositivo ON eventos.id_dispositivo = dispositivo.id_dispositivo WHERE activado = 0 ORDER BY fecha DESC";
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+
+                map.put("id_evento", cursor.getString(0));
+                map.put("id_dispositivo", cursor.getString(1));
+                map.put("fecha", cursor.getString(2));
+                map.put("tipo", cursor.getString(3));
+                map.put("nombre", cursor.getString(4));
+                map.put("plano", cursor.getString(5));
+                map.put("posx", cursor.getString(6));
+                map.put("posy", cursor.getString(7));
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return wordList;
+    }
+
+
 
 }

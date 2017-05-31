@@ -1,5 +1,6 @@
 package mahecha.nicolas.softgrafico;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -45,16 +47,18 @@ public class MainActivity extends AppCompatActivity
     EnvioDatos envioDatos = new EnvioDatos(this);
 
     ////////////***FRAGMENTOS***///////////////
-    public Mapas mapas = new Mapas();
-    public ListaEventos listaEventos = new ListaEventos();
-    public ListaDispositivos listaDispositivos = new ListaDispositivos();
-    public FragConfiguracion fragConfiguracion = new FragConfiguracion();
-    public mahecha.nicolas.softgrafico.Configuracion.Configdispositivos Configdispositivos = new Configdispositivos();
-    public mahecha.nicolas.softgrafico.Configuracion.Configmapa Configmapa = new Configmapa();
+    Mapas mapas = new Mapas();
+    ListaEventos listaEventos = new ListaEventos();
+    ListaDispositivos listaDispositivos = new ListaDispositivos();
+    Historial historial = new Historial();
+    FragConfiguracion fragConfiguracion = new FragConfiguracion();
+    mahecha.nicolas.softgrafico.Configuracion.Configdispositivos Configdispositivos = new Configdispositivos();
+    mahecha.nicolas.softgrafico.Configuracion.Configmapa Configmapa = new Configmapa();
 
 
    ////////////*******MANAGER**********////////////
     FragmentManager fm;
+    Fragment aux;
 
     ////////////*******FAB*******//////////
     FloatingActionButton fab;
@@ -104,13 +108,32 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fm = getFragmentManager();
-        Bundle bundle = new Bundle();
-        bundle.putString("plano","/storage/emulated/0/Pictures/piso3.jpg");
-        bundle.putString("posx","80");
-        bundle.putString("posy","80");
-        mapas.setArguments(bundle);
-        fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
+
+
+        ArrayList<HashMap<String, String>> userList = controller.geteventos();
+        if (userList.size() != 0) {
+
+            HashMap<String, String> hashMap = userList.get(0);
+            //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
+            fm = getFragmentManager();
+            Bundle bundle = new Bundle();
+            bundle.putString("plano",hashMap.get("plano"));
+            bundle.putString("posx",hashMap.get("posx"));
+            bundle.putString("posy",hashMap.get("posy"));
+            mapas.setArguments(bundle);
+            fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
+        }else{
+            fm = getFragmentManager();
+            Bundle bundle = new Bundle();
+            bundle.putString("plano","");
+            bundle.putString("posx","0");
+            bundle.putString("posy","0");
+            mapas.setArguments(bundle);
+            fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
+        }
+
+
+
 
         tareaP.execute();
 
@@ -151,19 +174,128 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
 
-            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
-            fm.executePendingTransactions();
-            fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+//            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
+//            fm.executePendingTransactions();
+//            fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+
+
+            ArrayList<HashMap<String, String>> userList = controller.geteventos();
+            if (userList.size() != 0) {
+
+                HashMap<String, String> hashMap = userList.get(0);
+                //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano",hashMap.get("plano"));
+                bundle.putString("posx",hashMap.get("posx"));
+                bundle.putString("posy",hashMap.get("posy"));
+                aux = new Mapas();
+                listaEventos = new ListaEventos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+
+            }else{
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano","");
+                bundle.putString("posx","0");
+                bundle.putString("posy","0");
+                aux = new Mapas();
+                listaEventos = new ListaEventos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+            }
+
 
         } else if (id == R.id.nav_gallery) {
 
-            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
-            fm.executePendingTransactions();
-            fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaDispositivos,"listdispo").commit();
+
+
+
+            ArrayList<HashMap<String, String>> userList = controller.getUsers();
+            if (userList.size() != 0) {
+
+                HashMap<String, String> hashMap = userList.get(0);
+                //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano",hashMap.get("plano"));
+                bundle.putString("posx",hashMap.get("posx"));
+                bundle.putString("posy",hashMap.get("posy"));
+                aux = new Mapas();
+                listaDispositivos = new ListaDispositivos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, listaDispositivos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+
+            }else{
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano","");
+                bundle.putString("posx","0");
+                bundle.putString("posy","0");
+                aux = new Mapas();
+                listaDispositivos = new ListaDispositivos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, listaDispositivos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+            }
 
         } else if (id == R.id.nav_slideshow) {
+
+
+
+            ArrayList<HashMap<String, String>> userList = controller.getehistorial();
+            if (userList.size() != 0) {
+
+                HashMap<String, String> hashMap = userList.get(0);
+                //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano",hashMap.get("plano"));
+                bundle.putString("posx",hashMap.get("posx"));
+                bundle.putString("posy",hashMap.get("posy"));
+                aux = new Mapas();
+                historial = new Historial();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, historial, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+
+            }else{
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano","");
+                bundle.putString("posx","0");
+                bundle.putString("posy","0");
+                aux = new Mapas();
+                historial = new Historial();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, historial, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+            }
+
+
 
         } else if (id == R.id.nav_manage) {
 
@@ -304,10 +436,32 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("tipo","1");
                 controller.inserevento(queryValues);
 
-                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
-                fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+//                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+//                fm.executePendingTransactions();
+//                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
+
+
+                  ArrayList<HashMap<String, String>> userList = controller.geteventos();
+               // if (userList.size() != 0) {
+
+                    HashMap<String, String> hashMap = userList.get(0);
+
+                    fm = getFragmentManager();
+                    fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("plano",hashMap.get("plano"));
+                    bundle.putString("posx",hashMap.get("posx"));
+                    bundle.putString("posy",hashMap.get("posy"));
+                    aux = new Mapas();
+                    listaEventos = new ListaEventos();
+                    aux.setArguments(bundle);
+                    fm = getFragmentManager();
+                    fm.beginTransaction().replace(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                    fm.executePendingTransactions();
+
+//                }
 
 
             }
@@ -321,11 +475,25 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","2");
                 controller.inserevento(queryValues);
-                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
-                fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
 
+                ArrayList<HashMap<String, String>> userList = controller.geteventos();
+                // if (userList.size() != 0) {
+
+                HashMap<String, String> hashMap = userList.get(0);
+
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano",hashMap.get("plano"));
+                bundle.putString("posx",hashMap.get("posx"));
+                bundle.putString("posy",hashMap.get("posy"));
+                aux = new Mapas();
+                listaEventos = new ListaEventos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().add(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
 
 
             }
@@ -339,11 +507,25 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","3");
                 controller.inserevento(queryValues);
-                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
-                fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
 
+                ArrayList<HashMap<String, String>> userList = controller.geteventos();
+                // if (userList.size() != 0) {
+
+                HashMap<String, String> hashMap = userList.get(0);
+
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano",hashMap.get("plano"));
+                bundle.putString("posx",hashMap.get("posx"));
+                bundle.putString("posy",hashMap.get("posy"));
+                aux = new Mapas();
+                listaEventos = new ListaEventos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().add(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
 
 
             }
@@ -357,11 +539,25 @@ public class MainActivity extends AppCompatActivity
                 queryValues.put("fecha", tiempo());
                 queryValues.put("tipo","4");
                 controller.inserevento(queryValues);
-                fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
-                fm.executePendingTransactions();
-                fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
 
+                ArrayList<HashMap<String, String>> userList = controller.geteventos();
+                // if (userList.size() != 0) {
+
+                HashMap<String, String> hashMap = userList.get(0);
+
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano",hashMap.get("plano"));
+                bundle.putString("posx",hashMap.get("posx"));
+                bundle.putString("posy",hashMap.get("posy"));
+                aux = new Mapas();
+                listaEventos = new ListaEventos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().add(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
 
 
             }
@@ -385,7 +581,7 @@ public class MainActivity extends AppCompatActivity
     public String tiempo()
     {
         Date date = new Date();
-        CharSequence s  = DateFormat.format("d/M/yyyy H:m", date.getTime());
+        CharSequence s  = DateFormat.format("d/M/yyyy H:m:s", date.getTime());
         String time = s.toString();
         return time ;
     }
