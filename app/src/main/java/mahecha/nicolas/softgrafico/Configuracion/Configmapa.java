@@ -2,8 +2,11 @@ package mahecha.nicolas.softgrafico.Configuracion;
 
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+import mahecha.nicolas.softgrafico.MainActivity;
 import mahecha.nicolas.softgrafico.R;
 import mahecha.nicolas.softgrafico.Sqlite.DBController;
 
@@ -61,18 +65,8 @@ public class Configmapa extends Fragment {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(),getArguments().getString("iddisp"),Toast.LENGTH_LONG).show();
-                queryValues = new HashMap<String, String>();
-                controller = new DBController(getActivity());
-                queryValues.put("id_dispositivo", getArguments().getString("iddisp"));
-                queryValues.put("puntox", ""+puntox);
-                queryValues.put("puntoy", ""+puntoy);
 
-                try {
-                    controller.uppuntos(queryValues);
-                }catch (Exception e) {
-                    // Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
-                }
+                showSimplePopUp();
 
             }
         });
@@ -119,9 +113,7 @@ public class Configmapa extends Fragment {
             if(getArguments().getString("plano") != null) {
                 bMap = BitmapFactory.decodeFile(getArguments().getString("plano"));
             }else{
-
                 bMap = BitmapFactory.decodeFile("null");
-
             }
             mImage = new BitmapDrawable(bMap);
 
@@ -242,6 +234,45 @@ public class Configmapa extends Fragment {
                 bm, 0, 0, width, height, matrix, false);
         bm.recycle();
         return resizedBitmap;
+    }
+
+
+    ///////////******************POP UP**************//////////////
+    private void showSimplePopUp() {
+
+        final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(getActivity());
+        helpBuilder.setTitle("GUARDAR!!");
+
+        helpBuilder.setMessage("Desea guardar punto?");
+
+        helpBuilder.setPositiveButton("Si",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        queryValues = new HashMap<String, String>();
+                        controller = new DBController(getActivity());
+                        queryValues.put("id_dispositivo", getArguments().getString("iddisp"));
+                        queryValues.put("puntox", ""+puntox);
+                        queryValues.put("puntoy", ""+puntoy);
+
+                        try {
+                            controller.uppuntos(queryValues);
+                        }catch (Exception e) {
+                            // Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+        helpBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // System.out.println("no");
+            }
+        });
+        AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
     }
 
 

@@ -78,7 +78,7 @@ public class Autoconfigura extends Fragment {
     private void tareaLarga()
     {
         try {
-            Thread.sleep(10000);
+            Thread.sleep(10000*3);
         } catch(InterruptedException e) {}
     }
     ///////////////************TAREA ASINCRONA*************///////////

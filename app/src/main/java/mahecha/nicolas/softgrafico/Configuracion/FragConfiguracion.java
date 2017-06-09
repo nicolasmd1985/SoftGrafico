@@ -20,12 +20,12 @@ public class FragConfiguracion extends Fragment {
 
     ////////////*******MANAGER**********////////////
     FragmentManager fm;
+    Fragment aux;
 
 
 
 
-
-    Button Autoconfig,asigsensor;
+    Button Autoconfig,asigsensor,Posensor;
 
 
 
@@ -63,6 +63,22 @@ public class FragConfiguracion extends Fragment {
 
                 Sensoresaplanos asigsensor = new Sensoresaplanos();
                 fm.beginTransaction().replace(R.id.principal,asigsensor,"asigsensor").commit();
+            }
+        });
+
+
+        Posensor =(Button)v.findViewById(R.id.possensor);
+        Posensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Configmapa configmapa = new Configmapa();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano","");
+                configmapa.setArguments(bundle);
+                Configdispositivos configdispositivos = new Configdispositivos();
+                fm.beginTransaction().replace(R.id.principal,configmapa,"mapas").replace(R.id.lista,configdispositivos).commit();
+
             }
         });
 

@@ -1,9 +1,11 @@
 package mahecha.nicolas.softgrafico;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
@@ -19,11 +21,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -62,6 +66,11 @@ public class MainActivity extends AppCompatActivity
 
     ////////////*******FAB*******//////////
     FloatingActionButton fab;
+
+
+    ///POP UP////
+    EditText getInput; //NEW
+    String myValue = "" ;
 
 
 
@@ -112,9 +121,9 @@ public class MainActivity extends AppCompatActivity
         }else{
             fm = getFragmentManager();
             Bundle bundle = new Bundle();
-            bundle.putString("plano","");
-            bundle.putString("posx","0");
-            bundle.putString("posy","0");
+            bundle.putString("plano","/storage/emulated/0/Pictures/propuesta.png");
+            bundle.putString("posx","-50");
+            bundle.putString("posy","-50");
             bundle.putString("imagen","");
             mapas.setArguments(bundle);
             fm.beginTransaction().add(R.id.lista,listaEventos,"listeven").add(R.id.principal, mapas,"mapas").commit();
@@ -139,11 +148,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -166,7 +171,12 @@ public class MainActivity extends AppCompatActivity
 //            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
 //            fm.executePendingTransactions();
 //            fm.beginTransaction().replace(R.id.principal,mapas,"mapas").replace(R.id.lista,listaEventos,"listeven").commit();
-
+            try            {
+                tareaP = new MiTareaAsincrona();
+                //fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+                tareaP.execute();
+                //mServiceIBinder.onDestroy();
+            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
             ArrayList<HashMap<String, String>> userList = controller.geteventos();
             if (userList.size() != 0) {
@@ -175,7 +185,7 @@ public class MainActivity extends AppCompatActivity
                 //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
@@ -191,11 +201,11 @@ public class MainActivity extends AppCompatActivity
             }else{
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
-                bundle.putString("plano","");
-                bundle.putString("posx","0");
-                bundle.putString("posy","0");
+                bundle.putString("plano","/storage/emulated/0/Pictures/propuesta.png");
+                bundle.putString("posx","-50");
+                bundle.putString("posy","-50");
                 bundle.putString("imagen","");
                 aux = new Mapas();
                 listaEventos = new ListaEventos();
@@ -208,7 +218,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_gallery) {
 
-
+            try            {
+                tareaP = new MiTareaAsincrona();
+                //fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+                tareaP.execute();
+                //mServiceIBinder.onDestroy();
+            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
 
             ArrayList<HashMap<String, String>> userList = controller.getUsers();
@@ -218,7 +233,7 @@ public class MainActivity extends AppCompatActivity
                 //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
@@ -234,7 +249,7 @@ public class MainActivity extends AppCompatActivity
             }else{
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano","");
                 bundle.putString("posx","0");
@@ -250,7 +265,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-
+            try            {
+                tareaP = new MiTareaAsincrona();
+                //fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+                tareaP.execute();
+                //mServiceIBinder.onDestroy();
+            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
             ArrayList<HashMap<String, String>> userList = controller.getehistorial();
             if (userList.size() != 0) {
@@ -259,7 +279,7 @@ public class MainActivity extends AppCompatActivity
                 //Toast.makeText(this,hashMap.get("plano"),Toast.LENGTH_LONG ).show();
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
@@ -275,7 +295,7 @@ public class MainActivity extends AppCompatActivity
             }else{
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano","");
                 bundle.putString("posx","0");
@@ -293,32 +313,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-           try {
-                tareaP.cancel(true);
-                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
-           }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
 
-            fm.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(Configdispositivos).remove(Configmapa).commit();
-            fm.executePendingTransactions();
-            fm.beginTransaction().replace(R.id.principal,fragConfiguracion).commit();
-
-
-        } else if (id == R.id.nav_share) {
-            try            {
-                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
-                tareaP.cancel(true);
-                //mServiceIBinder.onDestroy();
-            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
-
-        } else if (id == R.id.nav_send) {
-
-            try            {
-                tareaP = new MiTareaAsincrona();
-                //fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
-                tareaP.execute();
-                //mServiceIBinder.onDestroy();
-            }catch (Exception e){Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();}
+            showSimplePopUp();
 
         }
 
@@ -420,7 +416,7 @@ public class MainActivity extends AppCompatActivity
   try{
         for (int i = 0; i < split.length; i++) {
 
-            if (split[i].contains("AVERIA")) {
+            if (split[i].contains("AVERIA MONITOR") || split[i].contains("AVERIA HUMO") || split[i].contains("AVERIA SUPRV")) {
                 MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
                 mp.start();
                 queryValues = new HashMap<String, String>();
@@ -438,7 +434,7 @@ public class MainActivity extends AppCompatActivity
 
                     fm = getFragmentManager();
                     fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                    fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("plano",hashMap.get("plano"));
                     bundle.putString("posx",hashMap.get("posx"));
@@ -473,7 +469,7 @@ public class MainActivity extends AppCompatActivity
 
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
@@ -506,7 +502,7 @@ public class MainActivity extends AppCompatActivity
 
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
@@ -539,7 +535,7 @@ public class MainActivity extends AppCompatActivity
 
                 fm = getFragmentManager();
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).commit();
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("plano",hashMap.get("plano"));
                 bundle.putString("posx",hashMap.get("posx"));
@@ -554,6 +550,36 @@ public class MainActivity extends AppCompatActivity
 
 
             }
+
+
+            if (split[i].contains("SISTEMA NORMAL")) {
+
+
+                ArrayList<HashMap<String, String>> userList = controller.geteventos();
+                if (userList.size() != 0) {
+                    for (HashMap<String, String> hashMap : userList) {
+                        controller.upstado(hashMap.get("id_evento"));
+                    }
+                }
+
+                fm = getFragmentManager();
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("plano","/storage/emulated/0/Pictures/propuesta.png");
+                bundle.putString("posx","-50");
+                bundle.putString("posy","-50");
+                bundle.putString("imagen","");
+                aux = new Mapas();
+                listaEventos = new ListaEventos();
+                aux.setArguments(bundle);
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.lista, listaEventos, "listeven").replace(R.id.principal, aux, "mapas").commit();
+                fm.executePendingTransactions();
+
+
+            }
+
            }
 
         }catch(Exception e){}
@@ -574,8 +600,9 @@ public class MainActivity extends AppCompatActivity
     public String tiempo()
     {
         Date date = new Date();
-        CharSequence s  = DateFormat.format("d/M/yyyy H:m:s", date.getTime());
+        CharSequence s  = DateFormat.format("yyyy/M/d HH:mm:ss", date.getTime());
         String time = s.toString();
+        Toast.makeText(this,s,Toast.LENGTH_LONG).show();
         return time ;
     }
 
@@ -599,6 +626,60 @@ public class MainActivity extends AppCompatActivity
     private View getDecorView() {
         return getWindow().getDecorView();
     }
+
+
+
+
+    ///////////******************POP UP**************//////////////
+    private void showSimplePopUp() {
+
+        final AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
+        helpBuilder.setTitle("PRECAUCION!!");
+        LayoutInflater inflater = getLayoutInflater();
+        helpBuilder.setMessage("Desea Continuar?");
+        final View checkboxLayout = inflater.inflate(R.layout.popuplayout, null);
+        getInput = (EditText) checkboxLayout.findViewById(R.id.contra); //MISTAKE
+
+        helpBuilder.setPositiveButton("Si",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            String contras = getInput.getText().toString();
+                            if (contras.contains("1234")) {
+
+                                tareaP.cancel(true);
+                                fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
+                                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
+                                fm.executePendingTransactions();
+                                fm.beginTransaction().replace(R.id.principal, fragConfiguracion).commit();
+                            }else
+                                {Toast.makeText(getApplicationContext(),"CONTRASEÑA INCORRECTA",Toast.LENGTH_LONG).show();}
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+        helpBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               // System.out.println("no");
+            }
+        });
+
+        helpBuilder.setView(checkboxLayout);
+        helpBuilder.show();
+
+    }
+
+
+
+//        AlertDialog helpDialog = helpBuilder.create();
+//        helpDialog.show();
+
+
 
 
 }
