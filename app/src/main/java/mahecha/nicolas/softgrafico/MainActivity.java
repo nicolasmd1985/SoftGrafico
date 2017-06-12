@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         }else{
             fm = getFragmentManager();
             Bundle bundle = new Bundle();
-            bundle.putString("plano","/storage/emulated/0/Pictures/propuesta.png");
+            bundle.putString("plano","/storage/emulated/0/Pictures/soft_normal.jpg");
             bundle.putString("posx","-50");
             bundle.putString("posy","-50");
             bundle.putString("imagen","");
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
-                bundle.putString("plano","/storage/emulated/0/Pictures/propuesta.png");
+                bundle.putString("plano","/storage/emulated/0/Pictures/soft_normal.png");
                 bundle.putString("posx","-50");
                 bundle.putString("posy","-50");
                 bundle.putString("imagen","");
@@ -566,7 +566,7 @@ public class MainActivity extends AppCompatActivity
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
-                bundle.putString("plano","/storage/emulated/0/Pictures/propuesta.png");
+                bundle.putString("plano","/storage/emulated/0/Pictures/soft_normal.jpg");
                 bundle.putString("posx","-50");
                 bundle.putString("posy","-50");
                 bundle.putString("imagen","");
@@ -649,6 +649,7 @@ public class MainActivity extends AppCompatActivity
                             if (contras.contains("1234")) {
 
                                 tareaP.cancel(true);
+                                tareaP.onCancelled();
                                 fab.setBackgroundTintList(MainActivity.this.getResources().getColorStateList(R.color.gris));
                                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
