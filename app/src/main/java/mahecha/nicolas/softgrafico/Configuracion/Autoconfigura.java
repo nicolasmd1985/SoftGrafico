@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
@@ -61,15 +62,30 @@ public class Autoconfigura extends Fragment {
         tarea1 = new MiTareaAsincrona();
 
         fm = getFragmentManager();
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        pDialog.setMessage("Procesando...");
-        pDialog.setCancelable(true);
-        pDialog.setMax(100);
-        pDialog.setProgress(0);
-        pDialog.show();
-        pDialog.setProgress(10);
+//        pDialog = new ProgressDialog(getActivity());
+//        pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        pDialog.setMessage("Procesando...");
+//        pDialog.setCancelable(true);
+//        pDialog.setMax(100);
+//        pDialog.setProgress(0);
+//        pDialog.show();
+//        pDialog.setProgress(10);
 
+
+
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Obteniendo datos...");
+        pDialog.setCancelable(false);
+        pDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Finalizar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                try {
+                    tarea1.cancel(true);
+                }catch (Exception e){}
+            }
+        });
+        pDialog.show();
 
         tarea1.execute();
         return v;
@@ -78,7 +94,7 @@ public class Autoconfigura extends Fragment {
     private void tareaLarga()
     {
         try {
-            Thread.sleep(10000*3);
+            Thread.sleep(10000);
         } catch(InterruptedException e) {}
     }
     ///////////////************TAREA ASINCRONA*************///////////
@@ -100,24 +116,24 @@ public class Autoconfigura extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             if (mServiceIBinder != null) {
-                pDialog.setProgress(30);
+//                pDialog.setProgress(30);
 
                 resultado = String.valueOf(mServiceIBinder.getResultado());
                 if(resultado != null) {
-                    pDialog.setProgress(60);
-                    pDialog.setMessage("Esperando informacion de central...");
+//                    pDialog.setProgress(60);
+//                    pDialog.setMessage("Esperando informacion de central...");
                     if(!resultado.contentEquals(""))
                     {
-                        pDialog.setProgress(80);
+//                        pDialog.setProgress(80);
 
                         saltos();
                         envioDatos.enviar(resultado);
 
-                        tarea1.cancel(true);
-                        pDialog.setProgress(100);
-                        pDialog.hide();
+//                        tarea1.cancel(true);
+//                        pDialog.setProgress(100);
+//                        pDialog.hide();
                     }
-
+                    mServiceIBinder.cleanr();
 
                 }
             }

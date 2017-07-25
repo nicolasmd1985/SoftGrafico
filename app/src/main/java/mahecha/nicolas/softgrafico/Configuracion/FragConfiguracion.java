@@ -77,7 +77,7 @@ public class FragConfiguracion extends Fragment {
                 bundle.putString("plano","");
                 configmapa.setArguments(bundle);
                 Configdispositivos configdispositivos = new Configdispositivos();
-                fm.beginTransaction().replace(R.id.principal,configmapa,"mapas").replace(R.id.lista,configdispositivos).commit();
+                fm.beginTransaction().replace(R.id.principal,configmapa,"mapas").replace(R.id.lista,configdispositivos,"listeven").commit();
 
             }
         });

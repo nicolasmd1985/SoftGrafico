@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 fm.beginTransaction().remove(listaDispositivos).remove(mapas).remove(listaEventos).remove(fragConfiguracion).remove(historial).commit();
                 Bundle bundle = new Bundle();
-                bundle.putString("plano","/storage/emulated/0/Pictures/soft_normal.png");
+                bundle.putString("plano","/storage/emulated/0/Pictures/soft_normal.jpg");
                 bundle.putString("posx","-50");
                 bundle.putString("posy","-50");
                 bundle.putString("imagen","");
@@ -416,7 +416,19 @@ public class MainActivity extends AppCompatActivity
   try{
         for (int i = 0; i < split.length; i++) {
 
-            if (split[i].contains("AVERIA MONITOR") || split[i].contains("AVERIA HUMO") || split[i].contains("AVERIA SUPRV")) {
+            if (
+                    ////////**********español*******////////////
+                    split[i].contains("AVERIA MONITOR") ||
+                    split[i].contains("AVERIA HUMO") ||
+                    split[i].contains("AVERIA SUPRV") ||
+                    //////////************ingles********/////////
+                    split[i].contains("TROUBL MONITOR") ||
+                    split[i].contains("TROUBL SMOKE") ||
+                    split[i].contains("TROUBL PULL")
+
+                    )
+
+            {
                 MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
                 mp.start();
                 queryValues = new HashMap<String, String>();
@@ -485,7 +497,7 @@ public class MainActivity extends AppCompatActivity
 
             }
 
-            if (split[i].contains("ACTIVA")) {
+            if (split[i].contains("ACTIVA")||split[i].contains("ACTIVE")) {
                 MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
                 mp.start();
                 queryValues = new HashMap<String, String>();
@@ -518,7 +530,11 @@ public class MainActivity extends AppCompatActivity
 
             }
 
-            if (split[i].contains("AVERIA") && split[i].contains("BATERIAS")) {
+            if (
+                    (split[i].contains("AVERIA") && split[i].contains("BATERIAS")) ||
+                    (split[i].contains("TROUBLE") && split[i].contains("BATERIAS"))
+
+                    ) {
                 MediaPlayer mp = MediaPlayer.create(this, R.raw.alarma1);
                 mp.start();
                 queryValues = new HashMap<String, String>();
@@ -552,7 +568,7 @@ public class MainActivity extends AppCompatActivity
             }
 
 
-            if (split[i].contains("SISTEMA NORMAL")) {
+            if ((split[i].contains("SISTEMA NORMAL")) || (split[i].contains("SYSTEM NORMAL"))) {
 
 
                 ArrayList<HashMap<String, String>> userList = controller.geteventos();

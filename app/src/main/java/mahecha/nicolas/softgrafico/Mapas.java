@@ -108,16 +108,18 @@ public class Mapas extends Fragment {
              }
 
 
-            if(getArguments().getString("imagen").contains("HUMO")) {
+            if(getArguments().getString("imagen").contains("HUMO")||getArguments().getString("imagen").contains("SMOKE")) {
                 bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.sensorhumo);
             }
-            else if(getArguments().getString("imagen").contains("SUPRV")) {
+            else if(getArguments().getString("imagen").contains("SUPRV")||getArguments().getString("imagen").contains("SUPERV")) {
                 bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.pulsador);
             }
-            else if(getArguments().getString("imagen").contains("MONITOR") && getArguments().getString("imagen").contains("PULSADOR")) {
+            else if(getArguments().getString("imagen").contains("PULSADOR")||
+                    getArguments().getString("imagen").contains("PULL_STATION")) {
                 bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.avisador);
             }
-            else if(getArguments().getString("imagen").contains("BATERIA")) {
+            else if(getArguments().getString("imagen").contains("BATERIA")||
+                    getArguments().getString("imagen").contains("BATTERY")) {
                 bMap2 = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.bateria);
             }
             else if(getArguments().getString("imagen").contains("MONITOR")) {
