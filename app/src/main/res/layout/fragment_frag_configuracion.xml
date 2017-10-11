@@ -11,6 +11,47 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/autoconf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:elevation="0dp"
+                    android:text="Auto Configuracion" />
+
+                <Button
+                    android:id="@+id/manualconf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Configuracion Manual" />
+
+                <Button
+                    android:id="@+id/possensor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Posicionar sensores" />
+
+                <Button
+                    android:id="@+id/asigsensor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Asignar Sensores a Planos" />
+
+            </LinearLayout>
+        </ScrollView>
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
@@ -20,33 +61,5 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textStyle="bold|italic" />
 
-        <Button
-            android:id="@+id/autoconf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:elevation="0dp"
-            android:text="Auto Configuracion" />
-
-        <Button
-            android:id="@+id/asigsensor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Asignar Sensores a Planos" />
-
-        <Button
-            android:id="@+id/possensor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Posicionar sensores" />
-
-        <Button
-            android:id="@+id/manualconf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Configuracion Manual" />
     </LinearLayout>
 </FrameLayout>

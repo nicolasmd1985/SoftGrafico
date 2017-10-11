@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    // CONFIGURACION INTERFACE SERVICECONNECTION IBINDER
+    // CONFIGURACION INTERFACE SERVICE CONNECTION IBINDER
     private ServiceConnection sConnectionIB = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -618,7 +618,7 @@ public class MainActivity extends AppCompatActivity
         Date date = new Date();
         CharSequence s  = DateFormat.format("yyyy/M/d HH:mm:ss", date.getTime());
         String time = s.toString();
-        Toast.makeText(this,s,Toast.LENGTH_LONG).show();
+       // Toast.makeText(this,s,Toast.LENGTH_LONG).show();
         return time ;
     }
 

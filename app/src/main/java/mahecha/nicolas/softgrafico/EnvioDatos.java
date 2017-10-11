@@ -32,7 +32,7 @@ public class EnvioDatos {
     {
 
         queryValues = new HashMap<String, String>();
-        queryValues.put("fkidusuario", "4");
+        queryValues.put("fkidusuario", "5");
         queryValues.put("reporte", String.valueOf(resultado));
         queryValues.put("tiempo", tiempo());
         enviarepo();
@@ -55,13 +55,15 @@ public class EnvioDatos {
         {
             final String jrep = gson.toJson(wordList);
             params.put("jrep", jrep);
-            client.post("http://elca.sytes.net:5537/testELCA_APP/detalles_pedidov7/reportmant.php", params, new AsyncHttpResponseHandler() {
+            client.post("http://elca.sytes.net:5537/testELCA_APP/DatosCentralGraf/reportmant.php", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
-                    Toast.makeText(context, "Enviado!!!",
-                            Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, "Enviado!!!",
+                      //     Toast.LENGTH_LONG).show();
                     //System.out.println(jrep);
-                    //System.out.println(response);
+                    Toast.makeText(context, response,
+                         Toast.LENGTH_LONG).show();
+                   // System.out.println(response);
 
                 }
                 @Override
@@ -90,7 +92,7 @@ public class EnvioDatos {
     public String tiempo()
     {
         Date date = new Date();
-        CharSequence s  = DateFormat.format("yyyy/M/d H:m", date.getTime());
+        CharSequence s  = DateFormat.format("yyyy/M/d HH:mm:ss", date.getTime());
         String time = s.toString();
         return time ;
     }
